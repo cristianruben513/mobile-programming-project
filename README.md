@@ -65,10 +65,6 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
    - Lista de apuntes organizados por materia.
    - Editor de apuntes.
 
-7. **Mis Recordatorios**
-   - Lista de tareas y actividades pendientes.
-   - Formulario para crear/editar recordatorios.
-
 ### Pantallas para Profesores
 
 8. **Gestión de Calificaciones**
