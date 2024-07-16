@@ -6,7 +6,7 @@ import { config } from "@/config/config";
 export const loadDatabase = async () => {
   const dbName = config.DATABASE_NAME;
 
-  const dbAsset = require(`./assets/${dbName}`);
+  const dbAsset = require("../assets/database.db");
   const dbUri = Asset.fromModule(dbAsset).uri;
   const dbPath = `${FileSystem.documentDirectory}SQLite/${dbName}`;
 
