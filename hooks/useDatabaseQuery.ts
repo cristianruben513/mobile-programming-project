@@ -1,7 +1,7 @@
 import { useSQLiteContext } from "expo-sqlite";
 import { useCallback, useEffect, useState } from "react";
 
-export function useDatabase(query: string) {
+export function useDatabaseQuery(query: string) {
   const [data, setData] = useState<any>();
   const [error, setError] = useState(false);
 
