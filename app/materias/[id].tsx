@@ -1,8 +1,8 @@
 import { subjects } from "@/assets/data/dummyData";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { Ionicons } from "@expo/vector-icons";
-import { useLocalSearchParams } from "expo-router";
-import { StyleSheet, Text } from "react-native";
+import { Stack, useLocalSearchParams } from "expo-router";
+import { StyleSheet } from "react-native";
 
 export default function SubjectExample() {
   const { id } = useLocalSearchParams();
@@ -16,7 +16,11 @@ export default function SubjectExample() {
         <Ionicons size={310} name="code-slash" style={styles.headerImage} />
       }
     >
-      <Text>{subject?.name}</Text>
+      <Stack.Screen
+        options={{
+          title: subject?.name,
+        }}
+      />
     </ParallaxScrollView>
   );
 }

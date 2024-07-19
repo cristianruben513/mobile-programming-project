@@ -12,13 +12,15 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
-        headerShown: false,
+        headerStyle: {
+          backgroundColor: Colors[colorScheme ?? "light"].header,
+        },
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
-          title: "Asignaturas",
+          title: "Mis asignaturas",
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
               name={focused ? "home" : "home-outline"}
