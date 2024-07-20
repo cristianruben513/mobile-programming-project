@@ -1,9 +1,43 @@
-// You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
+// Icon families and icons on the web at https://icons.expo.fyi/
 
-import Ionicons from '@expo/vector-icons/Ionicons';
-import { type IconProps } from '@expo/vector-icons/build/createIconSet';
-import { type ComponentProps } from 'react';
+import { Colors } from "@/constants/Colors";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { type ComponentProps } from "react";
+import { Text, useColorScheme, View } from "react-native";
 
-export function TabBarIcon({ style, ...rest }: IconProps<ComponentProps<typeof Ionicons>['name']>) {
-  return <Ionicons size={28} style={[{ marginBottom: -3 }, style]} {...rest} />;
+interface Props {
+  title: string;
+  color: string;
+  focused: boolean;
+  iconName: ComponentProps<typeof Ionicons>["name"];
+}
+
+export function TabBarItem({ color, title, focused, iconName }: Props) {
+  const colorScheme = useColorScheme();
+
+  return (
+    <View className="items-center gap-2">
+      <Ionicons name={iconName} color={color} size={28} />
+      <View
+        style={{
+          paddingHorizontal: 5,
+          paddingVertical: 2,
+          borderRadius: 30,
+          backgroundColor: focused
+            ? Colors[colorScheme ?? "light"].tint
+            : "transparent",
+        }}
+      >
+        <Text
+          style={{
+            color: focused ? "#fff" : "#717171",
+            fontWeight: focused ? "bold" : "normal",
+            fontSize: 10,
+          }}
+        >
+          {title}
+        </Text>
+      </View>
+    </View>
+  );
 }

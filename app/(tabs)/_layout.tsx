@@ -1,7 +1,7 @@
 import { Tabs } from "expo-router";
 import React from "react";
 
-import { TabBarIcon } from "@/components/navigation/TabBarIcon";
+import { TabBarItem } from "@/components/navigation/TabBarIcon";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "react-native";
 
@@ -14,8 +14,13 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
+        tabBarShowLabel: false,
         headerStyle: {
           backgroundColor: Colors[colorScheme ?? "light"].header,
+        },
+        tabBarStyle: {
+          backgroundColor: Colors[colorScheme ?? "light"].tabBar,
+          height: 100,
         },
         headerRight: () => <UserButton />,
       }}
@@ -25,8 +30,10 @@ export default function TabLayout() {
         options={{
           title: "Asignaturas",
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
-              name={focused ? "home" : "home-outline"}
+            <TabBarItem
+              title="Asignaturas"
+              iconName={focused ? "albums" : "albums-outline"}
+              focused={focused}
               color={color}
             />
           ),
@@ -37,8 +44,10 @@ export default function TabLayout() {
         options={{
           title: "Calificaciones",
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
-              name={focused ? "code-slash" : "code-slash-outline"}
+            <TabBarItem
+              title="Calificaciones"
+              iconName={focused ? "bookmark" : "bookmark-outline"}
+              focused={focused}
               color={color}
             />
           ),
@@ -49,8 +58,10 @@ export default function TabLayout() {
         options={{
           title: "Apuntes",
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
-              name={focused ? "code-slash" : "code-slash-outline"}
+            <TabBarItem
+              title="Apuntes"
+              iconName={focused ? "document-text" : "document-text-outline"}
+              focused={focused}
               color={color}
             />
           ),
