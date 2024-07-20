@@ -39,6 +39,14 @@ export default function RootLayout() {
           <Stack.Screen name="(tabs)" />
           <Stack.Screen name="materias" />
           <Stack.Screen name="+not-found" />
+          <Stack.Screen
+            name="user"
+            options={{
+              headerShown: true,
+              presentation: "modal",
+              title: "Detalles del usuario",
+            }}
+          />
         </Stack>
       </ThemeProvider>
     </DatabaseProvider>

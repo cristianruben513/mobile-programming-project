@@ -5,6 +5,8 @@ import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "react-native";
 
+import UserButton from "@/components/UserButton";
+
 export default function TabLayout() {
   const colorScheme = useColorScheme();
 
@@ -15,12 +17,13 @@ export default function TabLayout() {
         headerStyle: {
           backgroundColor: Colors[colorScheme ?? "light"].header,
         },
+        headerRight: () => <UserButton />,
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
-          title: "Mis asignaturas",
+          title: "Asignaturas",
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
               name={focused ? "home" : "home-outline"}

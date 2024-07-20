@@ -9,8 +9,6 @@ export default function TabTwoScreen() {
   return (
     <SafeAreaView className="flex-1 p-6">
       <ThemedView className="p-6 gap-6 flex-1">
-        <ThemedText type="title">Explore</ThemedText>
-
         <Collapsible title="File-based routing">
           <ThemedText>
             This app has two screens:{" "}

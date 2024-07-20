@@ -17,16 +17,15 @@ export function Collapsible({
   return (
     <ThemedView>
       <TouchableOpacity
-        className="flex-row items-center gap-2"
+        className="flex-row gap-2"
         onPress={() => setIsOpen((value) => !value)}
-        activeOpacity={0.8}
       >
+        <ThemedText type="defaultSemiBold">{title}</ThemedText>
         <Ionicons
           name={isOpen ? "chevron-down" : "chevron-forward-outline"}
           size={18}
           color={theme === "light" ? Colors.light.icon : Colors.dark.icon}
         />
-        <ThemedText type="defaultSemiBold">{title}</ThemedText>
       </TouchableOpacity>
       {isOpen && <ThemedView className="mt-2 ml-6">{children}</ThemedView>}
     </ThemedView>

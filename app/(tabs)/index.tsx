@@ -10,12 +10,8 @@ export default function HomeScreen() {
   return (
     <SafeAreaView className="flex-1">
       <ThemedView className="flex-1 gap-6 p-6">
-        <ThemedText type="title" className="mb-4">
-          Mis asignaturas
-        </ThemedText>
-
         {subjects.map((materia) => (
-          <Link href={`/materias/${materia.id}`} asChild>
+          <Link href={`/materias/${materia.id}`} key={materia.id} asChild>
             <TouchableOpacity
               key={materia.id}
               className="border rounded-md border-sky-400 bg-sky-100 p-4"
