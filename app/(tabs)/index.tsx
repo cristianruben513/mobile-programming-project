@@ -14,9 +14,12 @@ export default function HomeScreen() {
           <Link href={`/materias/${materia.id}`} key={materia.id} asChild>
             <TouchableOpacity
               key={materia.id}
-              className="border rounded-md border-sky-400 bg-sky-100 p-4"
+              className="border rounded-lg border-sky-300/80 bg-sky-50 p-4"
             >
-              <ThemedText type="defaultSemiBold">{materia.name}</ThemedText>
+              <ThemedText type="title">{materia.name}</ThemedText>
+              <ThemedText className=" font-light mt-1">
+                {materia.teacher}
+              </ThemedText>
             </TouchableOpacity>
           </Link>
         ))}
