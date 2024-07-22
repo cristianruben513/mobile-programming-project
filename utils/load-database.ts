@@ -3,18 +3,27 @@ import * as FileSystem from "expo-file-system";
 import * as SQLite from "expo-sqlite";
 
 import { config } from "@/config/config";
-import { Float } from "react-native/Libraries/Types/CodegenTypes";
 
 export const loadDatabase = async () => {
   const dbName = config.DATABASE_NAME;
 
-  const getDatabasePath = () => {
-    return `${FileSystem.documentDirectory}SQLite/${dbName}`;
-  };
+
+  const dbAsset = require("../assets/database.db");
+  const dbUri = Asset.fromModule(dbAsset).uri;
+  const dbPath = `${FileSystem.documentDirectory}SQLite/${dbName}`;
+
+  const fileInfo = await FileSystem.getInfoAsync(dbPath);
+
+  if (!fileInfo.exists) {
+    await FileSystem.makeDirectoryAsync(
+      `${FileSystem.documentDirectory}SQLite`,
+      { intermediates: true }
+    );
+    await FileSystem.downloadAsync(dbUri, dbPath);
+  }
 
   const dropDatabase = async () => {
     try {
-      const dbPath = getDatabasePath();
 
       const fileInfo = await FileSystem.getInfoAsync(dbPath);
       if (fileInfo.exists) {
@@ -292,15 +301,6 @@ export const loadDatabase = async () => {
     period: number;
   }
 
-  // interface ClassWithTeacher {
-  //   id_class: number;
-  //   id_teacher: number;
-  //   name: string;
-  //   code: string;
-  //   cover: string;
-  //   teacher_name: string;
-  // }
-
   const allUsersRows = await db.getAllAsync("SELECT * FROM Users");
   const users = allUsersRows as User[];
   for (const row of users) {
@@ -341,43 +341,5 @@ export const loadDatabase = async () => {
   const grades = allGradesRows as Grades[];
   for (const row of grades) {
     console.log(row.id_grade, row.id_student, row.id_class, row.grade, row.period);
-  }
-
-  // const fetchClassesWithTeachers = async () => {
-  //   try {
-  //     // Updated SQL query to include teacher's name
-  //     const allClassesRows = await db.getAllAsync(`
-  //       SELECT Classes.id_class, Classes.id_teacher, Classes.name, Classes.code, Classes.cover, Teachers.field as teacher_name
-  //       FROM Classes
-  //       JOIN Teachers ON Classes.id_teacher = Teachers.id_teacher
-  //     `);
-  
-  //     // Cast the data to the desired type
-  //     const classes = allClassesRows as ClassWithTeacher[];
-  
-  //     // Loop through each element and log the details
-  //     for (const row of classes) {
-  //       console.log(row.id_class, row.teacher_name, row.name, row.code, row.cover);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching classes with teachers:", error);
-  //   }
-  // };
-  
-  // // Call the function
-  // fetchClassesWithTeachers();
-
-  const dbAsset = require("../assets/database.db");
-  const dbUri = Asset.fromModule(dbAsset).uri;
-  const dbPath = `${FileSystem.documentDirectory}SQLite/${dbName}`;
-
-  const fileInfo = await FileSystem.getInfoAsync(dbPath);
-
-  if (!fileInfo.exists) {
-    await FileSystem.makeDirectoryAsync(
-      `${FileSystem.documentDirectory}SQLite`,
-      { intermediates: true }
-    );
-    await FileSystem.downloadAsync(dbUri, dbPath);
-  }
+  }  
 };
