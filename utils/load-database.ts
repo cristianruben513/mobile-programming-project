@@ -96,6 +96,7 @@ export const loadDatabase = async () => {
       CREATE TABLE IF NOT EXISTS Grades (
         id_grade INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
         grade REAL NOT NULL,
+        period INTEGER NOT NULL,
         id_student INTEGER NOT NULL,
         id_class INTEGER NOT NULL,
         FOREIGN KEY (id_student) REFERENCES Students(id_student),
@@ -125,33 +126,65 @@ export const loadDatabase = async () => {
     const insertUsersDataQuery = `
     INSERT OR IGNORE INTO Users (id_user, name, password, email, creation_date) 
     VALUES 
-    (1, 'Luis Manuel Valdivia Oceguera', '321', 'email@uppenjamo.com', '01-01-02'), 
-    (2, 'Joseph Herrera Leon', '321', 'student@uppenjamo.com', '01-01-2045');
+    (1, 'Luis Manuel Valdivia Oceguera', 'contra', 'lmvaldivia@uppenjamo.edu.mx', '22-07-2024'), 
+    (2, 'Estefania Carreño Gonzalez', 'contra321', 'ecgonzales@uppenjamo.edu.mx', '22-07-2024'),
+    (3, 'Hiram Adonai Espiritu Lopez', 'contra321Lopez', 'haespiritu@uppenjamo.edu.mx', '22-07-2024'), 
+    (4, 'Rodrigo Vazquez Arias', '123', 'rvarias@uppenjamo.edu.mx', '22-07-2024'),
+    (5, 'Ramiro Ramos Melendez', 'password', 'rrmelendez@uppenjamo.edu.mx', '22-07-2024'),
+    (6, 'Maleny Torres Calderon', 'contrasena', 'mtcalderon@uppenjamo.edu.mx', '22-07-2024'),
+    (7, 'Antonio', 'asdfhpasdoifh', 'antonio@uppenjamo.edu.mx', '22-07-2024'),
+    (8, 'Joseph Herrera Leon', '321', 'student@uppenjamo.edu.mx', '01-01-2045');
   `;
 
     const insertStudentsDataQuery = `
     INSERT OR IGNORE INTO Students (id_student, id_user, generation, group_index, grade, major, note) 
-    VALUES (1, 2, '2020', 'A', '9', 'Ingenieria en Software', 'N/A');
+    VALUES (1, 8, '2020', 'A', '9', 'Ingenieria en Software', 'N/A');
   `;
 
     const insertTeachersDataQuery = `
     INSERT OR IGNORE INTO Teachers (id_teacher, field, id_user) 
-    VALUES (1, 'Ingenieria en Software', 1);
+    VALUES 
+    (1, 'Ingenieria en Software', 1),
+    (2, 'Plasticos', 2),
+    (3, 'Ingenieria Industrial', 3),
+    (4, 'Licenciatura en Administracion de Empresas', 4),
+    (5, 'Maestria en Idiomas', 5),
+    (6, 'Psicologia', 6),
+    (7, 'Ingenieria en Seguridad de la Informacion', 7);
   `;
 
     const insertClassesDataQuery = `
     INSERT OR IGNORE INTO Classes (id_class, name, code, cover, id_teacher) 
-    VALUES (1, 'Programacion Moviles II', '69420', '', 1);
+    VALUES 
+    (1, 'Tutorias 9A', '69420', '', 2),
+    (2, 'Arquitectura Orientada a Servicios', '48393', '', 3),
+    (3, 'Seguridad de la Informacion', '09032', '', 1),
+    (4, 'Administracion de Proyectos de Software', '93023', '', 4),
+    (5, 'Moviles II', '84932', '', 1),
+    (6, 'English 9A', '74832', '', 5),
+    (7, 'Expresion Oral y Escrita', '45728', '', 6),
+    (8, 'Mineria de Datos', '47382', '', 7);
   `;
 
     const insertAssistsDataQuery = `
     INSERT OR IGNORE INTO Assists (id_attendance, absent, date, id_student, id_class) 
-    VALUES (1, 1, '01-03-2024', 1, 1);
+    VALUES 
+    (1, 1, '18-07-2024', 1, 1),
+    (2, 1, '18-07-2024', 1, 2),
+    (3, 1, '18-07-2024', 1, 4);
   `;
 
     const insertGradesDataQuery = `
-    INSERT OR IGNORE INTO Grades (id_grade, grade, id_student, id_class) 
-    VALUES (1, 9.8, 1, 1);
+    INSERT OR IGNORE INTO Grades (id_grade, grade, period, id_student, id_class) 
+    VALUES 
+    (1, 9.8, 1, 1, 1),
+    (2, 8, 1, 1, 2),
+    (3, 8.7, 1, 1, 3),
+    (4, 10, 1, 1, 4),
+    (5, 9, 1, 1, 5),
+    (6, 8.1, 1, 1, 6),
+    (7, 9.9, 1, 1, 7),
+    (8, 7, 1, 1, 8);
   `;
 
     const queries = [
@@ -256,7 +289,17 @@ export const loadDatabase = async () => {
     id_student: number;
     id_class: number;
     grade: number;
+    period: number;
   }
+
+  // interface ClassWithTeacher {
+  //   id_class: number;
+  //   id_teacher: number;
+  //   name: string;
+  //   code: string;
+  //   cover: string;
+  //   teacher_name: string;
+  // }
 
   const allUsersRows = await db.getAllAsync("SELECT * FROM Users");
   const users = allUsersRows as User[];
@@ -297,8 +340,32 @@ export const loadDatabase = async () => {
   const allGradesRows = await db.getAllAsync("SELECT * FROM Grades");
   const grades = allGradesRows as Grades[];
   for (const row of grades) {
-    console.log(row.id_grade, row.id_student, row.id_class, row.grade);
+    console.log(row.id_grade, row.id_student, row.id_class, row.grade, row.period);
   }
+
+  // const fetchClassesWithTeachers = async () => {
+  //   try {
+  //     // Updated SQL query to include teacher's name
+  //     const allClassesRows = await db.getAllAsync(`
+  //       SELECT Classes.id_class, Classes.id_teacher, Classes.name, Classes.code, Classes.cover, Teachers.field as teacher_name
+  //       FROM Classes
+  //       JOIN Teachers ON Classes.id_teacher = Teachers.id_teacher
+  //     `);
+  
+  //     // Cast the data to the desired type
+  //     const classes = allClassesRows as ClassWithTeacher[];
+  
+  //     // Loop through each element and log the details
+  //     for (const row of classes) {
+  //       console.log(row.id_class, row.teacher_name, row.name, row.code, row.cover);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching classes with teachers:", error);
+  //   }
+  // };
+  
+  // // Call the function
+  // fetchClassesWithTeachers();
 
   const dbAsset = require("../assets/database.db");
   const dbUri = Asset.fromModule(dbAsset).uri;
