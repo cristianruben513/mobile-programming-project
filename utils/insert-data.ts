@@ -38,14 +38,14 @@ export const insertData = async () => {
   const insertClassesDataQuery = `
     INSERT OR IGNORE INTO Classes (id_class, name, code, cover, id_teacher) 
     VALUES 
-    (1, 'Tutorias 9A', '69420', '', 2),
-    (2, 'Arquitectura Orientada a Servicios', '48393', '', 3),
-    (3, 'Seguridad de la Informacion', '09032', '', 1),
-    (4, 'Administracion de Proyectos de Software', '93023', '', 4),
-    (5, 'Moviles II', '84932', '', 1),
-    (6, 'English 9A', '74832', '', 5),
-    (7, 'Expresion Oral y Escrita', '45728', '', 6),
-    (8, 'Mineria de Datos', '47382', '', 7);
+    (1, 'Tutorias 9A', '69420', 'https://images.unsplash.com/photo-1621356986575-05811227a42e?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 2),
+    (2, 'Arquitectura Orientada a Servicios', '48393', 'https://images.unsplash.com/photo-1625535163131-9d1fc30ea5f5?q=80&w=2832&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 3),
+    (3, 'Seguridad de la Informacion', '09032', 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 1),
+    (4, 'Administracion de Proyectos de Software', '93023', 'https://images.unsplash.com/photo-1557200134-3103da7b6bff?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 4),
+    (5, 'Moviles II', '84932', 'https://images.unsplash.com/photo-1497161884053-1d0d43fe3c61?q=80&w=2831&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 1),
+    (6, 'English 9A', '74832', 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=2844&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 5),
+    (7, 'Expresion Oral y Escrita', '45728', 'https://images.unsplash.com/photo-1607473129014-0afb7ed09c3a?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 6),
+    (8, 'Mineria de Datos', '47382', 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2426&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 7);
   `;
 
   const insertAssistsDataQuery = `

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import { Asset } from "expo-asset";
 import * as FileSystem from "expo-file-system";
 import * as SQLite from "expo-sqlite";
@@ -20,7 +22,7 @@ export const loadDatabase = async () => {
   if (!fileInfo.exists) {
     await FileSystem.makeDirectoryAsync(
       `${FileSystem.documentDirectory}SQLite`,
-      { intermediates: true }
+      { intermediates: true },
     );
     await FileSystem.downloadAsync(dbUri, dbPath);
   }
@@ -31,12 +33,11 @@ export const loadDatabase = async () => {
     console.error("Failed to open database.");
   }
   const init = () => {
-     createTables();
-     insertData();
-     displayData();
+    createTables();
+    insertData();
+    displayData();
     //dropDatabase();
   };
 
   init();
-
 };
