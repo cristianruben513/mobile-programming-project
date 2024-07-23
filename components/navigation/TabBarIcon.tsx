@@ -16,7 +16,13 @@ export function TabBarItem({ color, title, focused, iconName }: Props) {
   const colorScheme = useColorScheme();
 
   return (
-    <View className="items-center gap-2">
+    <View
+      style={{
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 2,
+      }}
+    >
       <Ionicons name={iconName} color={color} size={28} />
       <View
         style={{
