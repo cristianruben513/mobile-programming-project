@@ -1,5 +1,10 @@
 import { Asset } from "expo-asset";
 import * as FileSystem from "expo-file-system";
+import * as SQLite from "expo-sqlite";
+import { createTables } from "./create-tables";
+import { insertData } from "./insert-data";
+import { displayData } from "./display-data";
+import { dropDatabase } from "./drop-databse";
 
 import { config } from "@/config/config";
 
@@ -15,8 +20,23 @@ export const loadDatabase = async () => {
   if (!fileInfo.exists) {
     await FileSystem.makeDirectoryAsync(
       `${FileSystem.documentDirectory}SQLite`,
-      { intermediates: true },
+      { intermediates: true }
     );
     await FileSystem.downloadAsync(dbUri, dbPath);
   }
+
+  const db = await SQLite.openDatabaseAsync(config.DATABASE_NAME);
+
+  if (!db) {
+    console.error("Failed to open database.");
+  }
+  const init = () => {
+     createTables();
+     insertData();
+     displayData();
+    //dropDatabase();
+  };
+
+  init();
+
 };
