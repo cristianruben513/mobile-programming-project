@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from 'react';
 import {
   DarkTheme,
   DefaultTheme,
@@ -6,12 +7,11 @@ import {
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
 import { useColorScheme } from "react-native";
-
 import DatabaseProvider from "@/providers/database-provider";
 import "react-native-reanimated";
 import "../global.css";
+import SignUp from './signUp';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -21,6 +21,7 @@ export default function RootLayout() {
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
+  const [isSignedUp, setIsSignedUp] = useState<boolean>(false);
 
   useEffect(() => {
     if (loaded) {
@@ -30,6 +31,10 @@ export default function RootLayout() {
 
   if (!loaded) {
     return null;
+  }
+
+  if (!isSignedUp) {
+    return <SignUp setIsSignedUp={setIsSignedUp} />;
   }
 
   return (
