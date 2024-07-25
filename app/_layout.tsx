@@ -11,7 +11,7 @@ import { useColorScheme } from "react-native";
 import DatabaseProvider from "@/providers/database-provider";
 import "react-native-reanimated";
 import "../global.css";
-import SignUp from './signUp';
+import SignUp from './auth/signUp';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
