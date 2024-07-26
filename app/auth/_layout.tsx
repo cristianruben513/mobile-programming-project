@@ -8,12 +8,11 @@ import { RootStackParamList } from '@/types/types';
 const Stack = createStackNavigator<RootStackParamList>();
 
 export default function AuthNavigator() {
-    return (
-        // <NavigationContainer>
-        //     <Stack.Navigator initialRouteName="SignUp">
-        //         {/* <Stack.Screen name="SignUp" component={SignUp} /> */}
-        //     </Stack.Navigator>
-        // </NavigationContainer>'
-        null
-    );
+    // return (
+    //     <NavigationContainer>
+    //         <Stack.Navigator initialRouteName="SignUp">
+    //             <Stack.Screen name="SignUp" component={SignUp} />
+    //         </Stack.Navigator>
+    //     </NavigationContainer>
+    // );
 }
