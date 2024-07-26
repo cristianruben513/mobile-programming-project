@@ -1,4 +1,4 @@
-import { FlatList, SafeAreaView } from "react-native";
+import { FlatList, SafeAreaView, View, Text } from "react-native";
 
 import { ThemedView } from "@/components/ThemedView";
 
@@ -25,6 +25,14 @@ export default function HomeScreen() {
 
   if (error) {
     return <Loader />;
+  }
+
+  if (data && data.length === 0) {
+    return (
+      <View className="flex-1 justify-center items-center px-6">
+        <Text className="text-xl font-bold">No estas unido a niguna clase</Text>
+      </View>
+    );
   }
 
   return (
