@@ -23,12 +23,19 @@ export default function UserModal() {
 
   if (error || !data) return <Loader />;
 
-  console.log(data[0]);
+  const { name } = data[0];
+
+  const initials = name
+    .split(" ")
+    .map((word: string) => word[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
 
   return (
     <View className="flex-1 p-6 gap-5">
       <View className="mx-auto size-[170px] justify-center items-center bg-blue-200 rounded-full mb-3">
-        <Text>Foto</Text>
+        <Text className="text-2xl">{initials}</Text>
       </View>
       <View className="border border-neutral-300 p-5 py-4 rounded-xl bg-neutral-50">
         <Text className="font-bold text-xl text-green-600 mb-1">
