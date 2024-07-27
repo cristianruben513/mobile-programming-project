@@ -40,13 +40,13 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="calificaciones"
+        name="unirme"
         options={{
-          title: "Calificaciones",
+          title: "Unirme a nueva clase",
           tabBarIcon: ({ color, focused }) => (
             <TabBarItem
-              title="Calificaciones"
-              iconName={focused ? "bookmark" : "bookmark-outline"}
+              title="Unirme"
+              iconName={focused ? "add-circle" : "add-circle-outline"}
               focused={focused}
               color={color}
             />
