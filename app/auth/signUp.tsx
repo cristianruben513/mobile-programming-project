@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet } from "react-native";
 import { Formik } from "formik";
@@ -6,22 +5,23 @@ import * as Yup from "yup";
 import RNPickerSelect from "react-native-picker-select";
 import * as SQLite from 'expo-sqlite';
 import { config } from "@/config/config";
-
+import { User } from "@/types/index";
+import { displayData } from "@/utils/display-data";
 // Open or create the SQLite database
-const db = SQLite.openDatabaseAsync(config.DATABASE_NAME)
+const db = SQLite.openDatabaseSync(config.DATABASE_NAME);
 
-    // Define FormValues type
-    interface FormValues {
-        name: string;
-        email: string;
-        password: string;
-        role: string;
-        generation?: string;
-        group?: string;
-        grade?: string;
-        major?: string;
-        field?: string;
-    }
+// Define FormValues type
+interface FormValues {
+    name: string;
+    email: string;
+    password: string;
+    role: string;
+    generation?: string;
+    group?: string;
+    grade?: string;
+    major?: string;
+    field?: string;
+}
 
 const SignUpSchema = Yup.object().shape({
     name: Yup.string().required('Required'),
@@ -81,170 +81,207 @@ const major = [
     { label: "Posgrado en Maestria en Administracion", value: "Posgrado en Maestria en Administracion" },
 ];
 
+const insertDb = async (values: FormValues) => {
+    try {
+        const statementUser = await db.prepareAsync(`INSERT INTO Users (name, email, password, creation_date) VALUES (?, ?, ?, ?)`);
+        const statementStudent = await db.prepareAsync(`INSERT INTO Students (id_user, generation, group_index, grade, major, note) VALUES (?, ?, ?, ?, ?, ?)`);
+        const statementTeacher = await db.prepareAsync(`INSERT INTO Teachers (id_user, field) VALUES (?, ?)`);
+
+        try {
+
+            const name = values.name || "";
+            const email = values.email || "";
+            const password = values.password || "";
+            const generation = values.generation || "";
+            const group = values.group || "";
+            const grade = values.grade || "";
+            const major = values.major || "";
+            const field = values.field || "";
+
+            const result = await statementUser.executeAsync([
+                name,
+                email,
+                password,
+                new Date().toISOString()
+            ]);
+
+            const userId = result.lastInsertRowId;
+
+            if (values.role === "student") {
+                await statementStudent.executeAsync([
+                    userId,
+                    generation,
+                    group,
+                    grade,
+                    major,
+                    "N/A",
+                ]);
+            } else if (values.role === "teacher") {
+                await statementTeacher.executeAsync([
+                    userId,
+                    field
+                ]);
+            }
+        } finally {
+            await statementUser.finalizeAsync();
+            await statementStudent.finalizeAsync();
+            await statementTeacher.finalizeAsync();
+            displayData();
+        }
+    } catch (error) {
+        console.error("Unexpected error:", error);
+    }
+};
+
 const SignUp: React.FC<SignUpProps> = ({ setIsSignedUp }) => {
     const [selectedRole, setSelectedRole] = useState<string>("");
 
     const handleFormSubmit = (values: FormValues) => {
-        try {
-            // Prepare the SQL statement
-            // const statement = `INSERT INTO Users (name, email, password, role, generation, group, grade, major, field) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-            // db.transaction(tx => {
-            //     tx.executeSql(
-            //         statement,
-            //         [values.name, values.email, values.password, values.role, values.generation || null, values.group || null, values.grade || null, values.major || null, values.field || null],
-            //         () => {
-            //             console.log("User added successfully");
-            //             setIsSignedUp(true);
-            //         },
-            //         (_, error) => {
-            //             console.error("Error inserting user:", error);
-            //             return false;
-            //         }
-            //     );
-            // });
-        } catch (error) {
-            console.error("Unexpected error:", error);
-        }
+        insertDb(values).then(() => {
+            setIsSignedUp(true);
+        }).catch((error) => {
+            console.error("Failed to insert data into the database:", error);
+        });
     };
 
     return (
         <Formik
-        initialValues={{
-            email: "",
-            password: "",
-            role: "",
-            name: "",
-            generation: "",
-            group: "",
-            grade: "",
-            major: "",
-            field: ""
-        }}
-        validationSchema={SignUpSchema}
-        onSubmit={(values) => handleFormSubmit(values)}
-    >
-        {({
-            handleChange,
-            handleBlur,
-            handleSubmit,
-            setFieldValue,
-            values,
-            errors,
-            touched,
-        }) => (
-            <View style={styles.container}>
-                <Text>Name</Text>
-                <TextInput
-                    style={styles.input}
-                    onChangeText={handleChange("name")}
-                    onBlur={handleBlur("name")}
-                    value={values.name}
-                />
-                {errors.name && touched.name ? (
-                    <Text style={styles.errorText}>{errors.name}</Text>
-                ) : null}
-                <Text>Email</Text>
-                <TextInput
-                    style={styles.input}
-                    onChangeText={handleChange("email")}
-                    onBlur={handleBlur("email")}
-                    value={values.email}
-                />
-                {errors.email && touched.email ? (
-                    <Text style={styles.errorText}>{errors.email}</Text>
-                ) : null}
-                <Text>Password</Text>
-                <TextInput
-                    style={styles.input}
-                    onChangeText={handleChange("password")}
-                    onBlur={handleBlur("password")}
-                    value={values.password}
-                    secureTextEntry
-                />
-                {errors.password && touched.password ? (
-                    <Text style={styles.errorText}>{errors.password}</Text>
-                ) : null}
-                <Text>Role</Text>
-                <RNPickerSelect
-                    onValueChange={(value) => {
-                        setFieldValue("role", value);
-                        setSelectedRole(value);
-                    }}
-                    items={initialRoles}
-                    style={pickerSelectStyles}
-                    value={values.role}
-                />
-                {errors.role && touched.role ? (
-                    <Text style={styles.errorText}>{errors.role}</Text>
-                ) : null}
+            initialValues={{
+                email: "",
+                password: "",
+                role: "",
+                name: "",
+                generation: "",
+                group: "",
+                grade: "",
+                major: "",
+                field: ""
+            }}
+            validationSchema={SignUpSchema}
+            onSubmit={(values) => handleFormSubmit(values)}
+        >
+            {({
+                handleChange,
+                handleBlur,
+                handleSubmit,
+                setFieldValue,
+                values,
+                errors,
+                touched,
+            }) => (
+                <View style={styles.container}>
+                    <Text>Name</Text>
+                    <TextInput
+                        style={styles.input}
+                        onChangeText={handleChange("name")}
+                        onBlur={handleBlur("name")}
+                        value={values.name}
+                    />
+                    {errors.name && touched.name ? (
+                        <Text style={styles.errorText}>{errors.name}</Text>
+                    ) : null}
+                    <Text>Email</Text>
+                    <TextInput
+                        style={styles.input}
+                        onChangeText={handleChange("email")}
+                        onBlur={handleBlur("email")}
+                        value={values.email}
+                    />
+                    {errors.email && touched.email ? (
+                        <Text style={styles.errorText}>{errors.email}</Text>
+                    ) : null}
+                    <Text>Password</Text>
+                    <TextInput
+                        style={styles.input}
+                        onChangeText={handleChange("password")}
+                        onBlur={handleBlur("password")}
+                        value={values.password}
+                        secureTextEntry
+                    />
+                    {errors.password && touched.password ? (
+                        <Text style={styles.errorText}>{errors.password}</Text>
+                    ) : null}
+                    <Text>Role</Text>
+                    <RNPickerSelect
+                        onValueChange={(value) => {
+                            setFieldValue("role", value);
+                            setSelectedRole(value);
+                        }}
+                        items={initialRoles}
+                        style={pickerSelectStyles}
+                        value={values.role}
+                    />
+                    {errors.role && touched.role ? (
+                        <Text style={styles.errorText}>{errors.role}</Text>
+                    ) : null}
 
-                {values.role === "student" && (
-                    <>
-                        <Text>Generation</Text>
-                        <RNPickerSelect
-                            onValueChange={(value) => setFieldValue("generation", value)}
-                            items={generation}
-                            style={pickerSelectStyles}
-                            value={values.generation}
-                        />
-                        {errors.generation && touched.generation ? (
-                            <Text style={styles.errorText}>{errors.generation}</Text>
-                        ) : null}
+                    {values.role === "student" && (
+                        <>
+                            <Text>Generation</Text>
+                            <RNPickerSelect
+                                onValueChange={(value) => setFieldValue("generation", value)}
+                                items={generation}
+                                style={pickerSelectStyles}
+                                value={values.generation}
+                            />
+                            {errors.generation && touched.generation ? (
+                                <Text style={styles.errorText}>{errors.generation}</Text>
+                            ) : null}
 
-                        <Text>Group</Text>
-                        <RNPickerSelect
-                            onValueChange={(value) => setFieldValue("group", value)}
-                            items={group}
-                            style={pickerSelectStyles}
-                            value={values.group}
-                        />
-                        {errors.group && touched.group ? (
-                            <Text style={styles.errorText}>{errors.group}</Text>
-                        ) : null}
+                            <Text>Group</Text>
+                            <RNPickerSelect
+                                onValueChange={(value) => setFieldValue("group", value)}
+                                items={group}
+                                style={pickerSelectStyles}
+                                value={values.group}
+                            />
+                            {errors.group && touched.group ? (
+                                <Text style={styles.errorText}>{errors.group}</Text>
+                            ) : null}
 
-                        <Text>Grade</Text>
-                        <RNPickerSelect
-                            onValueChange={(value) => setFieldValue("grade", value)}
-                            items={grade}
-                            style={pickerSelectStyles}
-                            value={values.grade}
-                        />
-                        {errors.grade && touched.grade ? (
-                            <Text style={styles.errorText}>{errors.grade}</Text>
-                        ) : null}
+                            <Text>Grade</Text>
+                            <RNPickerSelect
+                                onValueChange={(value) => setFieldValue("grade", value)}
+                                items={grade}
+                                style={pickerSelectStyles}
+                                value={values.grade}
+                            />
+                            {errors.grade && touched.grade ? (
+                                <Text style={styles.errorText}>{errors.grade}</Text>
+                            ) : null}
 
-                        <Text>Major</Text>
-                        <RNPickerSelect
-                            onValueChange={(value) => setFieldValue("major", value)}
-                            items={major}
-                            style={pickerSelectStyles}
-                            value={values.major}
-                        />
-                        {errors.major && touched.major ? (
-                            <Text style={styles.errorText}>{errors.major}</Text>
-                        ) : null}
-                    </>
-                )}
+                            <Text>Major</Text>
+                            <RNPickerSelect
+                                onValueChange={(value) => setFieldValue("major", value)}
+                                items={major}
+                                style={pickerSelectStyles}
+                                value={values.major}
+                            />
+                            {errors.major && touched.major ? (
+                                <Text style={styles.errorText}>{errors.major}</Text>
+                            ) : null}
+                        </>
+                    )}
 
-                {values.role === "teacher" && (
-                    <>
-                        <Text>Field</Text>
-                        <TextInput
-                            style={styles.input}
-                            onChangeText={handleChange("field")}
-                            onBlur={handleBlur("field")}
-                            value={values.field}
-                        />
-                        {errors.field && touched.field ? (
-                            <Text style={styles.errorText}>{errors.field}</Text>
-                        ) : null}
-                    </>
-                )}
+                    {values.role === "teacher" && (
+                        <>
+                            <Text>Field</Text>
+                            <TextInput
+                                style={styles.input}
+                                onChangeText={handleChange("field")}
+                                onBlur={handleBlur("field")}
+                                value={values.field}
+                            />
+                            {errors.field && touched.field ? (
+                                <Text style={styles.errorText}>{errors.field}</Text>
+                            ) : null}
+                        </>
+                    )}
 
-                <Button onPress={() => handleSubmit()} title="Sign Up" />
-            </View>
-        )}
-    </Formik>
+                    <Button onPress={() => handleSubmit()} title="Sign Up" />
+                </View>
+            )}
+        </Formik>
     );
 };
 

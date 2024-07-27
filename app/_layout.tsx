@@ -37,23 +37,23 @@ export default function RootLayout() {
     return <SignUp setIsSignedUp={setIsSignedUp} />;
   }
 
-  return (
-    <DatabaseProvider>
-      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-        <Stack screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="(tabs)" />
-          <Stack.Screen name="materias" />
-          <Stack.Screen name="+not-found" />
-          <Stack.Screen
-            name="user"
-            options={{
-              headerShown: true,
-              presentation: "modal",
-              title: "Detalles del usuario",
-            }}
-          />
-        </Stack>
-      </ThemeProvider>
-    </DatabaseProvider>
-  );
+  // return (
+  //   <DatabaseProvider>
+  //     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+  //       <Stack screenOptions={{ headerShown: false }}>
+  //         <Stack.Screen name="(tabs)" />
+  //         <Stack.Screen name="materias" />
+  //         <Stack.Screen name="+not-found" />
+  //         <Stack.Screen
+  //           name="user"
+  //           options={{
+  //             headerShown: true,
+  //             presentation: "modal",
+  //             title: "Detalles del usuario",
+  //           }}
+  //         />
+  //       </Stack>
+  //     </ThemeProvider>
+  //   </DatabaseProvider>
+  // );
 }
