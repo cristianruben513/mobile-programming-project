@@ -1,23 +1,29 @@
 import { create } from "zustand";
 
-interface Data {
-  id_user: number;
-  id_student: number;
-  name: string;
-  email: string;
+export interface User {
+  userId: number;
+  userName: string;
+  userPassword: string;
+  userEmail: string;
+  userCreationDate: string;
+  userRole: "teacher" | "student" | "unknown";
+  roleId: number | null;
 }
 
 interface UserStore {
-  data: Data;
-  setData: (data: Data) => void;
+  user: User;
+  setUser: (data: any) => void;
 }
 
 export const useUserStore = create<UserStore>((set) => ({
-  data: {
-    id_user: 0,
-    id_student: 0,
-    name: "",
-    email: "",
+  user: {
+    userId: 0,
+    userName: "",
+    userPassword: "",
+    userEmail: "",
+    userCreationDate: "",
+    userRole: "unknown",
+    roleId: null,
   },
-  setData: (data: Data) => set({ data }),
+  setUser: (user: User) => set({ user }),
 }));

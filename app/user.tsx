@@ -1,31 +1,13 @@
 import Loader from "@/components/Loader";
-import { useDatabaseQuery } from "@/hooks/useDatabaseQuery";
+import { useUserStore } from "@/stores/useUserStore";
 import { Text, View } from "react-native";
 
 export default function UserModal() {
-  const query = `SELECT 
-    u.id_user,
-    u.name,
-    u.email,
-    CASE 
-        WHEN s.id_student IS NOT NULL THEN 'Alumno'
-        WHEN t.id_teacher IS NOT NULL THEN 'Maestro'
-        ELSE 'Desconocido'
-    END AS rol,
-      t.field AS clase_impartida
-    FROM 
-    Users u
-    LEFT JOIN Students s ON u.id_user = s.id_user
-    LEFT JOIN Teachers t ON u.id_user = t.id_user
-    where u.id_user = 8;`;
+  const { user } = useUserStore();
 
-  const { data, error } = useDatabaseQuery(query, []);
+  if (!user) return <Loader />;
 
-  if (error || !data) return <Loader />;
-
-  const { name } = data[0];
-
-  const initials = name
+  const initials = user.userName
     .split(" ")
     .map((word: string) => word[0])
     .join("")
@@ -41,17 +23,17 @@ export default function UserModal() {
         <Text className="font-bold text-xl text-green-600 mb-1">
           Tipo de usuario:
         </Text>
-        <Text className="font-semibold text-lg">{data[0].rol}</Text>
+        <Text className="font-semibold text-lg">{user.userRole}</Text>
       </View>
       <View className="border border-neutral-300 p-5 py-4 rounded-xl bg-neutral-50">
         <Text className="font-bold text-xl text-green-600 mb-1">Usuario:</Text>
-        <Text className="font-semibold text-lg">{data[0].name}</Text>
+        <Text className="font-semibold text-lg">{user.userName}</Text>
       </View>
       <View className="border border-neutral-300 p-5 py-4 rounded-xl bg-neutral-50">
         <Text className="font-bold text-xl text-green-600 mb-1">
           Correo electronico:
         </Text>
-        <Text className="font-semibold text-lg">{data[0].email}</Text>
+        <Text className="font-semibold text-lg">{user.userEmail}</Text>
       </View>
     </View>
   );

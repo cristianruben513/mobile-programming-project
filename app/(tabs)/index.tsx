@@ -5,9 +5,68 @@ import { ThemedView } from "@/components/ThemedView";
 import ClassCard from "@/components/Class/ClassCard";
 import Loader from "@/components/Loader";
 import { useDatabaseQuery } from "@/hooks/useDatabaseQuery";
+import { useUserStore } from "@/stores/useUserStore";
 import { ClassCardProps } from "@/types/classCard";
+import { useSQLiteContext } from "expo-sqlite";
+import { useCallback, useEffect } from "react";
 
 export default function HomeScreen() {
+  const { setUser } = useUserStore();
+  const database = useSQLiteContext();
+
+  const query = `
+  SELECT 
+      u.id_user AS userId,
+      u.name AS userName,
+      u.password AS userPassword,
+      u.email AS userEmail,
+      u.creation_date AS userCreationDate,
+      COALESCE(t.id_teacher, s.id_student) AS roleId,
+      CASE 
+          WHEN t.id_teacher IS NOT NULL THEN 'Maestro'
+          WHEN s.id_student IS NOT NULL THEN 'Estudiante'
+          ELSE 'unknown'
+      END AS userRole
+  FROM 
+      Users u
+      LEFT JOIN Teachers t ON u.id_user = t.id_user
+      LEFT JOIN Students s ON u.id_user = s.id_user
+  WHERE 
+      u.id_user = ?;
+`;
+
+  const handleGetUser = useCallback(async () => {
+    const dataUser = await database.getAllAsync(query, [8]);
+    setUser(dataUser[0]);
+  }, [database, query, setUser]);
+
+  useEffect(() => {
+    handleGetUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // const { data: dataUser } = useDatabaseQuery(
+  //   `SELECT
+  //       u.id_user AS userId,
+  //       u.name AS userName,
+  //       u.password AS userPassword,
+  //       u.email AS userEmail,
+  //       u.creation_date AS userCreationDate,
+  //       COALESCE(t.id_teacher, s.id_student) AS roleId,
+  //       CASE
+  //           WHEN t.id_teacher IS NOT NULL THEN 'teacher'
+  //           WHEN s.id_student IS NOT NULL THEN 'student'
+  //           ELSE 'unknown'
+  //       END AS userRole
+  //     FROM
+  //       Users u
+  //       LEFT JOIN Teachers t ON u.id_user = t.id_user
+  //       LEFT JOIN Students s ON u.id_user = s.id_user
+  //     WHERE
+  //       u.id_user = ?;`,
+  //   [8],
+  // );
+
   const { data, error } = useDatabaseQuery(
     ` SELECT 
         sc.id as id,

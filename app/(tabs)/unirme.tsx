@@ -8,9 +8,7 @@ import {
   View,
 } from "react-native";
 
-import Loader from "@/components/Loader";
-
-import { useDatabaseQuery } from "@/hooks/useDatabaseQuery";
+import { useUserStore } from "@/stores/useUserStore";
 import { Ionicons } from "@expo/vector-icons";
 import { useSQLiteContext } from "expo-sqlite";
 import { useState } from "react";
@@ -20,37 +18,15 @@ export default function TabTwoScreen() {
   const [errorInsert, setErrorInsert] = useState(false);
   const [successInsert, setSuccessInsert] = useState(false);
 
-  const database = useSQLiteContext();
+  const { user } = useUserStore();
 
-  const queryUser = `SELECT 
-    u.id_user,
-    s.id_student,
-    u.name,
-    u.email,
-    CASE 
-        WHEN s.id_student IS NOT NULL THEN 'Alumno'
-        WHEN t.id_teacher IS NOT NULL THEN 'Maestro'
-        ELSE 'Desconocido'
-    END AS rol,
-      t.field AS clase_impartida
-    FROM Users u
-    LEFT JOIN Students s ON u.id_user = s.id_user
-    LEFT JOIN Teachers t ON u.id_user = t.id_user
-    where u.id_user = 8;`;
+  const database = useSQLiteContext();
 
   const query = `INSERT INTO StudentsClasses (id_student, id_class) VALUES (?, ?)`;
 
-  const { data: dataUser, error } = useDatabaseQuery(queryUser, []);
-
-  console.log(dataUser);
-
-  if (error || !dataUser) return <Loader />;
-
   const handleJoinClass = async () => {
-    const { id_student } = dataUser[0];
-
     await database
-      .runAsync(query, [id_student, codigo])
+      .runAsync(query, [user.roleId, codigo])
       .then(() => setSuccessInsert(true))
       .catch((error) => {
         console.error("Error inserting data:", error);
@@ -91,7 +67,7 @@ export default function TabTwoScreen() {
         )}
 
         {successInsert && (
-          <View className="border-4 border-dotted border-green-600 justify-center items-center bg-red-100 rounded-xl h-[200px] gap-4">
+          <View className="border-4 border-dotted border-green-600 justify-center items-center bg-green-100 rounded-xl h-[200px] gap-4">
             <Ionicons name="checkmark-circle" size={48} color="green" />
             <Text className="text-lg font-bold text-green-600 text-center">
               Te has unido a la clase
