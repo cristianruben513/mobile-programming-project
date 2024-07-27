@@ -7,7 +7,7 @@ export default function ClassCard({
   id,
   className,
   teacherName,
-  cover,
+  classCover,
 }: ClassCardProps) {
   return (
     <Link href={`/materias/${id}`} asChild>
@@ -15,7 +15,7 @@ export default function ClassCard({
         className={`border rounded-lg border-sky-300/80 bg-sky-50 overflow-hidden mt-4`}
       >
         <Image
-          source={{ uri: cover }}
+          source={{ uri: classCover }}
           style={{
             width: "100%",
             height: 80,

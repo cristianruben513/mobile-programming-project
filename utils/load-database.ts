@@ -35,7 +35,7 @@ export const loadDatabase = async () => {
   const init = () => {
     createTables();
     insertData();
-    displayData();
+    //displayData();
     //dropDatabase();
   };
 

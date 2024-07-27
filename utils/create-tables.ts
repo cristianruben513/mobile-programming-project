@@ -55,14 +55,15 @@ export const createTables = async () => {
     `;
 
   const createTableStudentsClasses = `
-      CREATE TABLE IF NOT EXISTS StudentsClasses (
+    CREATE TABLE IF NOT EXISTS StudentsClasses (
         id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
         id_student INTEGER NOT NULL,
         id_class INTEGER NOT NULL,
         FOREIGN KEY (id_student) REFERENCES Students(id_student),
-        FOREIGN KEY (id_class) REFERENCES Classes(id_class)
-      );
-    `;
+        FOREIGN KEY (id_class) REFERENCES Classes(id_class),
+        UNIQUE (id_student, id_class)
+    );
+  `;
 
   const createTableAssists = `
       CREATE TABLE IF NOT EXISTS Assists (

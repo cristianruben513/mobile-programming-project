@@ -1,10 +1,17 @@
-import { SafeAreaView, Text, TextInput, TouchableOpacity } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
+import {
+  SafeAreaView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 import Loader from "@/components/Loader";
 
 import { useDatabaseQuery } from "@/hooks/useDatabaseQuery";
+import { Ionicons } from "@expo/vector-icons";
 import { useSQLiteContext } from "expo-sqlite";
 import { useState } from "react";
 
@@ -31,19 +38,24 @@ export default function TabTwoScreen() {
     LEFT JOIN Teachers t ON u.id_user = t.id_user
     where u.id_user = 8;`;
 
-  const query = `INSERT INTO StudentsClasses (id_user, id_class) VALUES (?, ?)`;
+  const query = `INSERT INTO StudentsClasses (id_student, id_class) VALUES (?, ?)`;
 
   const { data: dataUser, error } = useDatabaseQuery(queryUser, []);
+
+  console.log(dataUser);
 
   if (error || !dataUser) return <Loader />;
 
   const handleJoinClass = async () => {
-    const { id_user } = dataUser[0];
+    const { id_student } = dataUser[0];
 
     await database
-      .runAsync(query, [id_user, codigo])
+      .runAsync(query, [id_student, codigo])
       .then(() => setSuccessInsert(true))
-      .catch(() => setErrorInsert(true));
+      .catch((error) => {
+        console.error("Error inserting data:", error);
+        setErrorInsert(true);
+      });
   };
 
   return (
@@ -58,11 +70,11 @@ export default function TabTwoScreen() {
           onChange={(e) => {
             setCodigo(e.nativeEvent.text);
           }}
-          maxLength={5}
+          maxLength={2}
         />
 
         <TouchableOpacity
-          disabled={codigo.length !== 5}
+          disabled={codigo.length < 1}
           className="bg-green-600 rounded-xl py-4 px-6 w-full items-center justify-center disabled:bg-gray-500 disabled:opacity-75"
           onPress={handleJoinClass}
         >
@@ -70,15 +82,21 @@ export default function TabTwoScreen() {
         </TouchableOpacity>
 
         {errorInsert && (
-          <ThemedText className="text-lg font-bold text-red-600">
-            Error al unirte a la clase
-          </ThemedText>
+          <View className="border-4 border-dotted border-red-600 justify-center items-center bg-red-100 rounded-xl h-[200px] gap-4">
+            <Ionicons name="alert-circle" size={48} color="red" />
+            <Text className="text-lg font-bold text-red-600 text-center">
+              Error al unirte a la clase
+            </Text>
+          </View>
         )}
 
         {successInsert && (
-          <ThemedText className="text-lg font-bold text-green-600">
-            Te has unido a la clase
-          </ThemedText>
+          <View className="border-4 border-dotted border-green-600 justify-center items-center bg-red-100 rounded-xl h-[200px] gap-4">
+            <Ionicons name="checkmark-circle" size={48} color="green" />
+            <Text className="text-lg font-bold text-green-600 text-center">
+              Te has unido a la clase
+            </Text>
+          </View>
         )}
       </ThemedView>
     </SafeAreaView>

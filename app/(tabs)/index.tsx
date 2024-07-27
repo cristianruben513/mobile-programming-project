@@ -1,4 +1,4 @@
-import { FlatList, SafeAreaView, View, Text } from "react-native";
+import { FlatList, SafeAreaView, Text, View } from "react-native";
 
 import { ThemedView } from "@/components/ThemedView";
 
@@ -9,19 +9,30 @@ import { ClassCardProps } from "@/types/classCard";
 
 export default function HomeScreen() {
   const { data, error } = useDatabaseQuery(
-    `SELECT
-      Classes.id_class as id,
-      Classes.name as className, 
-      Classes.cover as cover,
-      Users.name as teacherName    
-     FROM Classes 
-     INNER JOIN Teachers ON Classes.id_teacher = Teachers.id_teacher 
-     INNER JOIN Users ON Teachers.id_user = Users.id_user`,
+    ` SELECT 
+        sc.id as id,
+        u_student.name AS student_name,
+        u_student.email AS student_email,
+        c.id_class,
+        c.name AS className,
+        c.code AS class_code,
+        c.cover AS classCover,
+        t.id_teacher,
+        t.field AS teacher_field,
+        u_teacher.name AS teacherName,
+        u_teacher.email AS teacher_email,
+        u_teacher.creation_date AS teacher_creation_date
+    FROM 
+        Students s
+        JOIN Users u_student ON s.id_user = u_student.id_user
+        JOIN StudentsClasses sc ON s.id_student = sc.id_student
+        JOIN Classes c ON sc.id_class = c.id_class
+        JOIN Teachers t ON c.id_teacher = t.id_teacher
+        JOIN Users u_teacher ON t.id_user = u_teacher.id_user
+    WHERE 
+        s.id_student = 1;`,
     [],
   );
-
-  console.log("dddddddddddd");
-  console.log(data);
 
   if (error) {
     return <Loader />;
@@ -46,7 +57,7 @@ export default function HomeScreen() {
             <ClassCard
               id={item?.id}
               teacherName={item.teacherName}
-              cover={item.cover}
+              classCover={item.classCover}
               className={item.className}
             />
           )}
