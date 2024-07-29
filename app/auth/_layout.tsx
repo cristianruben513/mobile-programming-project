@@ -1,17 +1,26 @@
-import * as React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import SignUp from './signUp';
-import { RootStackParamList } from '@/types/types';
+import React, { useState } from 'react';
+import SignUp from '@/components/SignUp';
+import SignIn from '@/components/SignIn';
 
-const Stack = createStackNavigator<RootStackParamList>();
+interface SignUpProps {
+    setIsSignedUp: React.Dispatch<React.SetStateAction<boolean>>;
+    setFirstTimeRegister: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
-export default function AuthNavigator() {
-    // return (
-    //     <NavigationContainer>
-    //         <Stack.Navigator initialRouteName="SignUp">
-    //             <Stack.Screen name="SignUp" component={SignUp} />
-    //         </Stack.Navigator>
-    //     </NavigationContainer>
-    // );
+export default function AuthNavigator({ setIsSignedUp, setFirstTimeRegister }: SignUpProps) {
+    const [firstTimeRegister, setFirstTimeRegisterInternal] = useState<boolean>(true);
+
+    const handleChangePage = () => {
+        setFirstTimeRegisterInternal(false);
+    };
+
+    if (firstTimeRegister) {
+        return <SignUp setIsSignedUp={setIsSignedUp} setFirstTimeRegister={handleChangePage} />;
+    }
+    else{
+        return (
+            <SignIn setIsSignedUp={setIsSignedUp} setFirstTimeRegister={handleChangePage}/>
+        );
+    }
+    
 }

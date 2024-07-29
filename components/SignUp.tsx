@@ -7,6 +7,7 @@ import * as SQLite from 'expo-sqlite';
 import { config } from "@/config/config";
 import { displayData } from "@/utils/display-data";
 
+
 const db = SQLite.openDatabaseSync(config.DATABASE_NAME);
 
 interface FormValues {
@@ -30,6 +31,7 @@ const SignUpSchema = Yup.object().shape({
 
 interface SignUpProps {
     setIsSignedUp: React.Dispatch<React.SetStateAction<boolean>>;
+    setFirstTimeRegister: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const initialRoles = [
@@ -86,19 +88,10 @@ const insertDb = async (values: FormValues) => {
         const statementTeacher = await db.prepareAsync(`INSERT INTO Teachers (id_user, field) VALUES (?, ?)`);
 
         try {
-            const name = values.name || "";
-            const email = values.email || "";
-            const password = values.password || "";
-            const generation = values.generation || "";
-            const group = values.group || "";
-            const grade = values.grade || "";
-            const major = values.major || "";
-            const field = values.field || "";
-
             const result = await statementUser.executeAsync([
-                name,
-                email,
-                password,
+                values.name,
+                values.email,
+                values.password,
                 new Date().toISOString()
             ]);
 
@@ -107,16 +100,16 @@ const insertDb = async (values: FormValues) => {
             if (values.role === "student") {
                 await statementStudent.executeAsync([
                     userId,
-                    generation,
-                    group,
-                    grade,
-                    major,
+                    values.generation || "",
+                    values.group || "",
+                    values.grade || "",
+                    values.major || "",
                     "N/A",
                 ]);
             } else if (values.role === "teacher") {
                 await statementTeacher.executeAsync([
                     userId,
-                    field
+                    values.field || ""
                 ]);
             }
         } finally {
@@ -130,15 +123,17 @@ const insertDb = async (values: FormValues) => {
     }
 };
 
-const SignUp: React.FC<SignUpProps> = ({ setIsSignedUp }) => {
-    const [selectedRole, setSelectedRole] = useState<string>("");
-
+export default function SignUp({ setIsSignedUp, setFirstTimeRegister }: SignUpProps) {
     const handleFormSubmit = (values: FormValues) => {
         insertDb(values).then(() => {
             setIsSignedUp(true);
         }).catch((error) => {
             console.error("Failed to insert data into the database:", error);
         });
+    };
+
+    const changePage = () => {
+        setFirstTimeRegister(false);
     };
 
     return (
@@ -155,7 +150,7 @@ const SignUp: React.FC<SignUpProps> = ({ setIsSignedUp }) => {
                 field: ""
             }}
             validationSchema={SignUpSchema}
-            onSubmit={(values) => handleFormSubmit(values)}
+            onSubmit={handleFormSubmit}
         >
             {({
                 handleChange,
@@ -202,7 +197,6 @@ const SignUp: React.FC<SignUpProps> = ({ setIsSignedUp }) => {
                     <RNPickerSelect
                         onValueChange={(value) => {
                             setFieldValue("role", value);
-                            setSelectedRole(value);
                         }}
                         items={initialRoles}
                         style={pickerSelectStyles}
@@ -276,11 +270,12 @@ const SignUp: React.FC<SignUpProps> = ({ setIsSignedUp }) => {
                     )}
 
                     <Button onPress={() => handleSubmit()} title="Sign Up" />
+                    <Button onPress={changePage} title="Already have an account? Sign In"/>
                 </View>
             )}
         </Formik>
     );
-};
+}
 
 const styles = StyleSheet.create({
     container: {
@@ -317,5 +312,3 @@ const pickerSelectStyles = StyleSheet.create({
         paddingHorizontal: 8,
     },
 });
-
-export default SignUp;

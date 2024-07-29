@@ -11,8 +11,7 @@ import { useColorScheme } from "react-native";
 import DatabaseProvider from "@/providers/database-provider";
 import "react-native-reanimated";
 import "../global.css";
-import SignUp from './auth/signUp';
-import SignIn from './auth/signIn';
+import AuthNavigator from './auth/_layout';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -23,6 +22,7 @@ export default function RootLayout() {
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
   const [isSignedUp, setIsSignedUp] = useState<boolean>(false);
+  const [isFirstTimeRegister, setFirstTimeRegister] = useState<boolean>(false);
 
   useEffect(() => {
     if (loaded) {
@@ -35,26 +35,26 @@ export default function RootLayout() {
   }
 
   if (!isSignedUp) {
-    return <SignIn />;
+    return <AuthNavigator setIsSignedUp={setIsSignedUp} setFirstTimeRegister={setFirstTimeRegister}/>;
   }
 
-  // return (
-  //   <DatabaseProvider>
-  //     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-  //       <Stack screenOptions={{ headerShown: false }}>
-  //         <Stack.Screen name="(tabs)" />
-  //         <Stack.Screen name="materias" />
-  //         <Stack.Screen name="+not-found" />
-  //         <Stack.Screen
-  //           name="user"
-  //           options={{
-  //             headerShown: true,
-  //             presentation: "modal",
-  //             title: "Detalles del usuario",
-  //           }}
-  //         />
-  //       </Stack>
-  //     </ThemeProvider>
-  //   </DatabaseProvider>
-  // );
+  return (
+    <DatabaseProvider>
+      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="(tabs)" />
+          <Stack.Screen name="materias" />
+          <Stack.Screen name="+not-found" />
+          <Stack.Screen
+            name="user"
+            options={{
+              headerShown: true,
+              presentation: "modal",
+              title: "Detalles del usuario",
+            }}
+          />
+        </Stack>
+      </ThemeProvider>
+    </DatabaseProvider>
+  );
 }

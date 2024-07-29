@@ -33,12 +33,20 @@ const checkUserCredentials = async (values: FormValues) => {
         console.error("Unexpected error:", error);
     }
 }
+interface SignUpProps {
+    setIsSignedUp: React.Dispatch<React.SetStateAction<boolean>>;
+    setFirstTimeRegister: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
-
-export default function SignIn() {
+export default function SignIn({ setIsSignedUp, setFirstTimeRegister }: SignUpProps) {
 
     const handleFormSubmit = (values: FormValues) => {
         checkUserCredentials(values)
+        setIsSignedUp(true);
+    };
+
+    const changePage = () => {
+        setFirstTimeRegister(true);
     };
 
     return (
@@ -83,6 +91,7 @@ export default function SignIn() {
                     ) : null}
 
                     <Button onPress={() => handleSubmit()} title="Sign In" />
+                    <Button onPress={() => changePage()} title="Don't have an account? Sign Up"/>
                 </View>
             )}
         </Formik>
