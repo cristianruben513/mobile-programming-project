@@ -20,19 +20,14 @@ const SignInSchema = Yup.object().shape({
 
 const checkUserCredentials = async (values: FormValues) => {
     try {
-        await db.withTransactionAsync(async () => {
-            const result = await db.getFirstAsync('SELECT * FROM users WHERE email = ? AND password = ?', values.email, values.password) as { rows: FormValues[] };
-
-            if (result && result.rows && result.rows.length > 0) {
-                console.log('Count:', result.rows.length);
-            } else {
-                console.log('No matching user found.');
-            }
-        });
+        const result = await db.getFirstAsync('SELECT * FROM users WHERE email = ? AND password = ?', values.email, values.password) as { rows: FormValues[] };
+        return result;
     } catch (error) {
         console.error("Unexpected error:", error);
+        return false;
     }
-}
+};
+
 interface SignUpProps {
     setIsSignedUp: React.Dispatch<React.SetStateAction<boolean>>;
     setFirstTimeRegister: React.Dispatch<React.SetStateAction<boolean>>;
@@ -40,9 +35,13 @@ interface SignUpProps {
 
 export default function SignIn({ setIsSignedUp, setFirstTimeRegister }: SignUpProps) {
 
-    const handleFormSubmit = (values: FormValues) => {
-        checkUserCredentials(values)
-        setIsSignedUp(true);
+    const handleFormSubmit = async (values: FormValues) => {
+        const isValid = await checkUserCredentials(values);
+        if (isValid) {
+            setIsSignedUp(true);
+        } else {
+            console.log('Invalid credentials');
+        }
     };
 
     const changePage = () => {
