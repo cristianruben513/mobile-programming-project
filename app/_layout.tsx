@@ -12,6 +12,7 @@ import DatabaseProvider from "@/providers/database-provider";
 import "react-native-reanimated";
 import "../global.css";
 import SignUp from './auth/signUp';
+import SignIn from './auth/signIn';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -34,7 +35,7 @@ export default function RootLayout() {
   }
 
   if (!isSignedUp) {
-    return <SignUp setIsSignedUp={setIsSignedUp} />;
+    return <SignIn />;
   }
 
   // return (

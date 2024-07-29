@@ -5,12 +5,10 @@ import * as Yup from "yup";
 import RNPickerSelect from "react-native-picker-select";
 import * as SQLite from 'expo-sqlite';
 import { config } from "@/config/config";
-import { User } from "@/types/index";
 import { displayData } from "@/utils/display-data";
-// Open or create the SQLite database
+
 const db = SQLite.openDatabaseSync(config.DATABASE_NAME);
 
-// Define FormValues type
 interface FormValues {
     name: string;
     email: string;
@@ -88,7 +86,6 @@ const insertDb = async (values: FormValues) => {
         const statementTeacher = await db.prepareAsync(`INSERT INTO Teachers (id_user, field) VALUES (?, ?)`);
 
         try {
-
             const name = values.name || "";
             const email = values.email || "";
             const password = values.password || "";
