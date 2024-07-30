@@ -74,7 +74,7 @@ export default function SignIn({ setIsSignedUp, setFirstTimeRegister }: SignUpPr
                 <SafeAreaView className="flex-1 h-full">
                     <ThemedView className="flex-1 justify-center h-full p-6">
                         <ThemedText type="title" style={{ fontSize: 30, marginBottom: 10 }}>Sign In</ThemedText>
-                        <ThemedText>Email</ThemedText>
+                        <ThemedText type="title">Email</ThemedText>
                         <TextInput
                             className="text-white border border-neutral-400 rounded-lg p-6 py-4 mb-6"
                             onChangeText={handleChange("email")}
@@ -88,13 +88,16 @@ export default function SignIn({ setIsSignedUp, setFirstTimeRegister }: SignUpPr
                             <Text className="text-red-500 mb-6">{errors.email}</Text>
                         ) : null}
 
-                        <ThemedText>Password</ThemedText>
+                        <ThemedText type="title">Password</ThemedText>
                         <TextInput
                             className="text-white border border-neutral-400 rounded-lg p-6 py-4  mb-6"
                             onChangeText={handleChange("password")}
                             onBlur={handleBlur("password")}
                             value={values.password}
                             secureTextEntry
+                            style={
+                                { color: colorScheme === 'dark' ? 'white' : 'black' }
+                            }
                         />
                         {errors.password && touched.password ? (
                             <Text className="text-red-500 mb-6">{errors.password}</Text>
@@ -102,7 +105,7 @@ export default function SignIn({ setIsSignedUp, setFirstTimeRegister }: SignUpPr
 
                         <TouchableOpacity
                             className="bg-green-600 mb-8 rounded-xl py-4 px-6 w-full items-center justify-center"
-                            onPress={() => handleSubmit}
+                            onPress={() => handleSubmit()}
                         >
                             <Text className="text-white font-bold">Sign In</Text>
                         </TouchableOpacity>
