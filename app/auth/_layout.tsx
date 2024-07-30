@@ -10,8 +10,6 @@ interface AuthNavigatorProps {
 export default function AuthNavigator({ setIsSignedUp, setFirstTimeRegister }: AuthNavigatorProps) {
     const [firstTimeRegister, setFirstTimeRegisterInternal] = useState<boolean>(true);
 
-    console.log(firstTimeRegister);
-
     const handleChangePage = (isRegistering: boolean) => {
         setFirstTimeRegisterInternal(isRegistering);
     };

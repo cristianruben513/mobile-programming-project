@@ -74,7 +74,7 @@ export default function SignIn({ setIsSignedUp, setFirstTimeRegister }: SignUpPr
                 <SafeAreaView className="flex-1 h-full">
                     <ThemedView className="flex-1 justify-center h-full p-6">
                         <ThemedText type="title" style={{ fontSize: 30, marginBottom: 10 }}>Sign In</ThemedText>
-                        <ThemedText type="title">Email</ThemedText>
+                        <ThemedText type="subtitle">Email</ThemedText>
                         <TextInput
                             className="text-white border border-neutral-400 rounded-lg p-6 py-4 mb-6"
                             onChangeText={handleChange("email")}
@@ -88,7 +88,7 @@ export default function SignIn({ setIsSignedUp, setFirstTimeRegister }: SignUpPr
                             <Text className="text-red-500 mb-6">{errors.email}</Text>
                         ) : null}
 
-                        <ThemedText type="title">Password</ThemedText>
+                        <ThemedText type="subtitle">Password</ThemedText>
                         <TextInput
                             className="text-white border border-neutral-400 rounded-lg p-6 py-4  mb-6"
                             onChangeText={handleChange("password")}

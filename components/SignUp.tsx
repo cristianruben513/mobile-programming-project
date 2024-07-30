@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet } from "react-native";
+import { View, Text, TextInput, Button, StyleSheet, SafeAreaView, useColorScheme, TouchableOpacity } from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import RNPickerSelect from "react-native-picker-select";
 import * as SQLite from 'expo-sqlite';
 import { config } from "@/config/config";
 import { displayData } from "@/utils/display-data";
+import { ThemedView } from "@/components/ThemedView";
+import { ThemedText } from "@/components/ThemedText";
 
 
 const db = SQLite.openDatabaseSync(config.DATABASE_NAME);
@@ -124,6 +126,33 @@ const insertDb = async (values: FormValues) => {
 };
 
 export default function SignUp({ setIsSignedUp, setFirstTimeRegister }: SignUpProps) {
+
+    const colorScheme = useColorScheme();
+
+
+    const pickerSelectStyles = StyleSheet.create({
+        inputIOS: {
+            fontSize: 16,
+            paddingVertical: 12,
+            paddingHorizontal: 10,
+            borderWidth: 1,
+            borderColor: 'gray',
+            borderRadius: 4,
+            color: colorScheme === 'dark' ? 'white' : 'black',
+            paddingRight: 30, // to ensure the text is never behind the icon
+        },
+        inputAndroid: {
+            fontSize: 16,
+            paddingHorizontal: 10,
+            paddingVertical: 8,
+            borderWidth: 0.5,
+            borderColor: 'gray',
+            borderRadius: 8,
+            color: colorScheme === 'dark' ? 'white' : 'black',
+            paddingRight: 30, // to ensure the text is never behind the icon
+        },
+    })
+
     const handleFormSubmit = (values: FormValues) => {
         insertDb(values).then(() => {
             setIsSignedUp(true);
@@ -137,6 +166,7 @@ export default function SignUp({ setIsSignedUp, setFirstTimeRegister }: SignUpPr
     };
 
     return (
+
         <Formik
             initialValues={{
                 email: "",
@@ -161,154 +191,158 @@ export default function SignUp({ setIsSignedUp, setFirstTimeRegister }: SignUpPr
                 errors,
                 touched,
             }) => (
-                <View style={styles.container}>
-                    <Text>Name</Text>
-                    <TextInput
-                        style={styles.input}
-                        onChangeText={handleChange("name")}
-                        onBlur={handleBlur("name")}
-                        value={values.name}
-                    />
-                    {errors.name && touched.name ? (
-                        <Text style={styles.errorText}>{errors.name}</Text>
-                    ) : null}
-                    <Text>Email</Text>
-                    <TextInput
-                        style={styles.input}
-                        onChangeText={handleChange("email")}
-                        onBlur={handleBlur("email")}
-                        value={values.email}
-                    />
-                    {errors.email && touched.email ? (
-                        <Text style={styles.errorText}>{errors.email}</Text>
-                    ) : null}
-                    <Text>Password</Text>
-                    <TextInput
-                        style={styles.input}
-                        onChangeText={handleChange("password")}
-                        onBlur={handleBlur("password")}
-                        value={values.password}
-                        secureTextEntry
-                    />
-                    {errors.password && touched.password ? (
-                        <Text style={styles.errorText}>{errors.password}</Text>
-                    ) : null}
-                    <Text>Role</Text>
-                    <RNPickerSelect
-                        onValueChange={(value) => {
-                            setFieldValue("role", value);
-                        }}
-                        items={initialRoles}
-                        style={pickerSelectStyles}
-                        value={values.role}
-                    />
-                    {errors.role && touched.role ? (
-                        <Text style={styles.errorText}>{errors.role}</Text>
-                    ) : null}
+                <SafeAreaView className="flex-1 h-full">
+                    <ThemedView className="flex-1 justify-center h-full p-4">
+                        <ThemedText type="title" style={{ fontSize: 30, marginBottom: 10 }}>Sign Up</ThemedText>
+                        <ThemedText type="subtitle">Name</ThemedText>
+                        <TextInput
+                            className="text-white border border-neutral-400 rounded-lg p-6 py-4  mb-6"
+                            onChangeText={handleChange("name")}
+                            onBlur={handleBlur("name")}
+                            value={values.name}
+                        />
+                        {errors.name && touched.name ? (
+                            <Text style={styles.errorText}>{errors.name}</Text>
+                        ) : null}
+                        <ThemedText type="subtitle">Email</ThemedText>
+                        <TextInput
+                            className="text-white border border-neutral-400 rounded-lg p-6 py-4  mb-6"
+                            onChangeText={handleChange("email")}
+                            onBlur={handleBlur("email")}
+                            value={values.email}
+                        />
+                        {errors.email && touched.email ? (
+                            <Text style={styles.errorText}>{errors.email}</Text>
+                        ) : null}
+                        <ThemedText type="subtitle">Password</ThemedText>
+                        <TextInput
+                            className="text-white border border-neutral-400 rounded-lg p-6 py-4  mb-6"
+                            onChangeText={handleChange("password")}
+                            onBlur={handleBlur("password")}
+                            value={values.password}
+                            secureTextEntry
+                        />
+                        {errors.password && touched.password ? (
+                            <Text style={styles.errorText}>{errors.password}</Text>
+                        ) : null}
+                        <ThemedText type="subtitle">Role</ThemedText>
+                        <RNPickerSelect
+                            onValueChange={(value) => {
+                                setFieldValue("role", value);
+                            }}
+                            items={initialRoles}
+                            style={pickerSelectStyles}
+                            value={values.role}
 
-                    {values.role === "student" && (
-                        <>
-                            <Text>Generation</Text>
-                            <RNPickerSelect
-                                onValueChange={(value) => setFieldValue("generation", value)}
-                                items={generation}
-                                style={pickerSelectStyles}
-                                value={values.generation}
-                            />
-                            {errors.generation && touched.generation ? (
-                                <Text style={styles.errorText}>{errors.generation}</Text>
-                            ) : null}
+                        />
+                        {errors.role && touched.role ? (
+                            <ThemedText className="text-red-500 mb-6">{errors.role}</ThemedText>
+                        ) : null}
 
-                            <Text>Group</Text>
-                            <RNPickerSelect
-                                onValueChange={(value) => setFieldValue("group", value)}
-                                items={group}
-                                style={pickerSelectStyles}
-                                value={values.group}
-                            />
-                            {errors.group && touched.group ? (
-                                <Text style={styles.errorText}>{errors.group}</Text>
-                            ) : null}
+                        {values.role === "student" && (
+                            <>
+                                <View style={styles.row}>
+                                    <View style={styles.column}>
+                                        <ThemedText type="subtitle">Generation</ThemedText>
+                                        <RNPickerSelect
+                                            onValueChange={(value) => setFieldValue("generation", value)}
+                                            items={generation}
+                                            style={pickerSelectStyles}
+                                            value={values.generation}
+                                        />
+                                        {errors.generation && touched.generation ? (
+                                            <Text style={styles.errorText}>{errors.generation}</Text>
+                                        ) : null}
+                                    </View>
+                                    <View style={styles.column}>
+                                        <ThemedText type="subtitle">Group</ThemedText>
+                                        <RNPickerSelect
+                                            onValueChange={(value) => setFieldValue("group", value)}
+                                            items={group}
+                                            style={pickerSelectStyles}
+                                            value={values.group}
+                                        />
+                                        {errors.group && touched.group ? (
+                                            <Text className="text-red-500 mb-6">{errors.group}</Text>
+                                        ) : null}
+                                    </View>
+                                </View>
+                                <ThemedText type="subtitle">Grade</ThemedText>
+                                <RNPickerSelect
+                                    onValueChange={(value) => setFieldValue("grade", value)}
+                                    items={grade}
+                                    style={pickerSelectStyles}
+                                    value={values.grade}
+                                />
+                                {errors.grade && touched.grade ? (
+                                    <Text className="text-red-500 mb-6">{errors.grade}</Text>
+                                ) : null}
+                                <ThemedText type="subtitle">Major</ThemedText>
+                                <RNPickerSelect
+                                    onValueChange={(value) => setFieldValue("major", value)}
+                                    items={major}
+                                    style={pickerSelectStyles}
+                                    value={values.major}
+                                />
+                                {errors.major && touched.major ? (
+                                    <Text className="text-red-500 mb-6">{errors.major}</Text>
+                                ) : null}
+                            </>
+                        )}
 
-                            <Text>Grade</Text>
-                            <RNPickerSelect
-                                onValueChange={(value) => setFieldValue("grade", value)}
-                                items={grade}
-                                style={pickerSelectStyles}
-                                value={values.grade}
-                            />
-                            {errors.grade && touched.grade ? (
-                                <Text style={styles.errorText}>{errors.grade}</Text>
-                            ) : null}
+                        {values.role === "teacher" && (
+                            <>
+                                <ThemedText type="subtitle">Field</ThemedText>
+                                <TextInput
+                                    className="text-white border border-neutral-400 rounded-lg p-6 py-4  mb-6"
+                                    onChangeText={handleChange("field")}
+                                    onBlur={handleBlur("field")}
+                                    value={values.field}
+                                />
+                                {errors.field && touched.field ? (
+                                    <Text className="text-red-500 mb-6">{errors.field}</Text>
+                                ) : null}
+                            </>
+                        )}
 
-                            <Text>Major</Text>
-                            <RNPickerSelect
-                                onValueChange={(value) => setFieldValue("major", value)}
-                                items={major}
-                                style={pickerSelectStyles}
-                                value={values.major}
-                            />
-                            {errors.major && touched.major ? (
-                                <Text style={styles.errorText}>{errors.major}</Text>
-                            ) : null}
-                        </>
-                    )}
 
-                    {values.role === "teacher" && (
-                        <>
-                            <Text>Field</Text>
-                            <TextInput
-                                style={styles.input}
-                                onChangeText={handleChange("field")}
-                                onBlur={handleBlur("field")}
-                                value={values.field}
-                            />
-                            {errors.field && touched.field ? (
-                                <Text style={styles.errorText}>{errors.field}</Text>
-                            ) : null}
-                        </>
-                    )}
+                        <TouchableOpacity
+                            className="bg-green-600 mb-8 rounded-xl py-4 px-6 w-full items-center justify-center"
+                            onPress={() => handleSubmit()}
+                        >
+                            <Text className="text-white font-bold">Sign Up</Text>
+                        </TouchableOpacity>
 
-                    <Button onPress={() => handleSubmit()} title="Sign Up" />
-                    <Button onPress={changePage} title="Already have an account? Sign In"/>
-                </View>
-            )}
-        </Formik>
+                        <TouchableOpacity
+                            className="bg-blue-700 rounded-xl py-4 px-6 w-full items-center justify-center"
+                            onPress={changePage}
+                        >
+                            <Text className="text-white font-bold">Already have an account? Sign In</Text>
+                        </TouchableOpacity>
+                    </ThemedView>
+                </SafeAreaView>
+            )
+            }
+        </Formik >
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: "center",
-        padding: 16,
+    row: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 20,
     },
-    input: {
-        height: 40,
-        borderColor: "gray",
-        borderWidth: 1,
-        marginBottom: 12,
-        paddingHorizontal: 8,
+    column: {
+        flex: 1,
+        marginHorizontal: 10,
     },
     errorText: {
-        color: "red",
-        marginBottom: 12,
+        color: 'red',
+        fontSize: 12,
+        marginBottom: 5,
     },
 });
 
-const pickerSelectStyles = StyleSheet.create({
-    inputIOS: {
-        height: 40,
-        borderColor: "gray",
-        borderWidth: 1,
-        marginBottom: 12,
-        paddingHorizontal: 8,
-    },
-    inputAndroid: {
-        height: 40,
-        borderColor: "gray",
-        borderWidth: 1,
-        marginBottom: 12,
-        paddingHorizontal: 8,
-    },
-});
+
+
