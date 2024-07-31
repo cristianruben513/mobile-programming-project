@@ -20,10 +20,12 @@ export default function RootLayout() {
 
   if (!isSignedUp) {
     return (
-      <AuthNavigator
-        setIsSignedUp={setIsSignedUp}
-        setFirstTimeRegister={setFirstTimeRegister}
-      />
+      <DatabaseProvider>
+        <AuthNavigator
+          setIsSignedUp={setIsSignedUp}
+          setFirstTimeRegister={setFirstTimeRegister}
+        />
+      </DatabaseProvider>
     );
   }
 
@@ -42,6 +44,7 @@ export default function RootLayout() {
               title: "Detalles del usuario",
             }}
           />
+          <Stack.Screen name="camera" options={{ headerShown: false }} />
         </Stack>
       </ThemeProvider>
     </DatabaseProvider>
