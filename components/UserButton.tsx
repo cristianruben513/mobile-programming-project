@@ -2,18 +2,12 @@ import { Colors } from "@/constants/Colors";
 import { useUserStore } from "@/stores/useUserStore";
 import { Link } from "expo-router";
 import { Pressable, Text } from "react-native";
+import { getInitials } from "@/utils/get-initials";
 
 export default function UserButton() {
   const { user } = useUserStore();
 
-  const { userName } = user;
-
-  const initials = userName
-    .split(" ")
-    .map((word: string) => word[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
+  const initials = getInitials(user.userName);
 
   return (
     <Link href="/user" asChild>

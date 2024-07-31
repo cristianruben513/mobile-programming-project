@@ -1,5 +1,6 @@
 import Loader from "@/components/Loader";
 import { useUserStore } from "@/stores/useUserStore";
+import { getInitials } from "@/utils/get-initials";
 import { Text, View } from "react-native";
 
 export default function UserModal() {
@@ -7,12 +8,7 @@ export default function UserModal() {
 
   if (!user) return <Loader />;
 
-  const initials = user.userName
-    .split(" ")
-    .map((word: string) => word[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
+  const initials = getInitials(user.userName);
 
   return (
     <View className="flex-1 p-6 gap-5">
