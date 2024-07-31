@@ -11,20 +11,29 @@ import { useColorScheme } from "react-native";
 import "react-native-reanimated";
 import "../global.css";
 import AuthNavigator from "./auth/_layout";
+import TeacherRootLayout from "./teacher/_layout";
+import Grades from "./teacher/grades";
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
 
   const [isSignedUp, setIsSignedUp] = useState(false);
+  const [isTeacher, setIsTeacher] = useState(true);
   const [isFirstTimeRegister, setFirstTimeRegister] = useState(false);
 
-  if (!isSignedUp) {
+  // if (!isSignedUp) {
+  //   return (
+  //     <AuthNavigator
+  //       setIsSignedUp={setIsSignedUp}
+  //       setFirstTimeRegister={setFirstTimeRegister}
+  //     />
+  //   );
+  // }
+
+  if (isTeacher) {
     return (
-      <AuthNavigator
-        setIsSignedUp={setIsSignedUp}
-        setFirstTimeRegister={setFirstTimeRegister}
-      />
-    );
+      <Grades />
+    )
   }
 
   return (
