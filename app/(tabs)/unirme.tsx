@@ -51,9 +51,10 @@ export default function TabTwoScreen() {
 
         <TouchableOpacity
           disabled={codigo.length < 1}
-          className="bg-green-600 rounded-xl py-4 px-6 w-full items-center justify-center disabled:bg-gray-500 disabled:opacity-75"
+          className="flex-row bg-green-600 rounded-xl py-4 gap-3 w-full items-center justify-center disabled:bg-gray-500 disabled:opacity-75"
           onPress={handleJoinClass}
         >
+          <Ionicons name="link" size={24} color="white" />
           <Text className="text-white font-bold">Unirme a clase</Text>
         </TouchableOpacity>
 

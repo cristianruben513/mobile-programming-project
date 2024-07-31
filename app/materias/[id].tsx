@@ -2,6 +2,7 @@ import Loader from "@/components/Loader";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { useDatabaseQuery } from "@/hooks/useDatabaseQuery";
+import { Ionicons } from "@expo/vector-icons";
 import { Stack, useLocalSearchParams } from "expo-router";
 import { Image, StyleSheet, Text, View } from "react-native";
 
@@ -41,14 +42,20 @@ export default function SubjectExample() {
       />
 
       <View>
-        <Text>Profesor:</Text>
-        <Text className="text-xl font-bold mt-1">{data[0]?.teacher_name}</Text>
+        <View className="flex-row gap-2 items-center">
+          <Ionicons name="person" size={16} color="black" />
+          <Text className="text-lg">Profesor:</Text>
+        </View>
+        <Text className="text-xl font-bold mt-3">{data[0]?.teacher_name}</Text>
       </View>
 
-      <View className="p-2 px-4 border border-green-400 bg-green-50 rounded-xl">
-        <ThemedText style={{ color: "green" }} type="defaultSemiBold">
-          Codigo de la materia:
-        </ThemedText>
+      <View className="p-2 px-4 border border-green-400 bg-green-50 rounded-xl mt-3">
+        <View className="flex-row gap-2 items-center mb-2">
+          <Ionicons name="key" size={16} color="green" />
+          <ThemedText style={{ color: "green" }} type="defaultSemiBold">
+            Codigo de la materia:
+          </ThemedText>
+        </View>
         <ThemedText>{data[0]?.class_code}</ThemedText>
       </View>
     </ParallaxScrollView>

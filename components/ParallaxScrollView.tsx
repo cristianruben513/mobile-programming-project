@@ -10,7 +10,7 @@ import Animated, {
 
 import { ThemedView } from "@/components/ThemedView";
 
-const HEADER_HEIGHT = Constants.statusBarHeight + 70;
+const HEADER_HEIGHT = Constants.statusBarHeight + 90;
 
 type Props = PropsWithChildren<{
   headerImage: ReactElement;
