@@ -211,42 +211,44 @@ export default function SignUp({
               Sign Up
             </ThemedText>
 
-            <Input
-              placeholder="Name"
-              onChangeText={handleChange("name")}
-              onBlur={handleBlur("name")}
-              value={values.name}
-              errors={errors.name as string}
-              touched={touched.name as boolean}
-            />
+            <View className="gap-6 mt-8">
+              <Input
+                placeholder="Name"
+                onChangeText={handleChange("name")}
+                onBlur={handleBlur("name")}
+                value={values.name}
+                errors={errors.name as string}
+                touched={touched.name as boolean}
+              />
 
-            <Input
-              placeholder="Email"
-              onChangeText={handleChange("email")}
-              onBlur={handleBlur("email")}
-              value={values.email}
-              errors={errors.email as string}
-              touched={touched.email as boolean}
-            />
+              <Input
+                placeholder="Email"
+                onChangeText={handleChange("email")}
+                onBlur={handleBlur("email")}
+                value={values.email}
+                errors={errors.email as string}
+                touched={touched.email as boolean}
+              />
 
-            <Input
-              placeholder="Password"
-              onChangeText={handleChange("password")}
-              onBlur={handleBlur("password")}
-              value={values.password}
-              errors={errors.password as string}
-              touched={touched.password as boolean}
-              secureTextEntry
-            />
+              <Input
+                placeholder="Password"
+                onChangeText={handleChange("password")}
+                onBlur={handleBlur("password")}
+                value={values.password}
+                errors={errors.password as string}
+                touched={touched.password as boolean}
+                secureTextEntry
+              />
 
-            <Picker
-              placeholder="Role"
-              onValueChange={(value) => setFieldValue("role", value)}
-              items={initialRoles}
-              errors={errors.role as string}
-              touched={touched.role as boolean}
-              value={values.role}
-            />
+              <Picker
+                placeholder="Role"
+                onValueChange={(value) => setFieldValue("role", value)}
+                items={initialRoles}
+                errors={errors.role as string}
+                touched={touched.role as boolean}
+                value={values.role}
+              />
+            </View>
 
             {values.role === "student" && (
               <>
@@ -308,21 +310,23 @@ export default function SignUp({
               </View>
             )}
 
-            <TouchableOpacity
-              className="bg-green-600 my-8 rounded-xl py-4 px-6 w-full items-center justify-center"
-              onPress={() => handleSubmit()}
-            >
-              <Text className="text-white font-bold">Sign Up</Text>
-            </TouchableOpacity>
+            <View className="gap-6 mt-8">
+              <TouchableOpacity
+                className="bg-green-600 my-8 rounded-xl py-4 px-6 w-full items-center justify-center"
+                onPress={() => handleSubmit()}
+              >
+                <Text className="text-white font-bold">Sign Up</Text>
+              </TouchableOpacity>
 
-            <TouchableOpacity
-              className="rounded-xl px-6 w-full items-center justify-center"
-              onPress={changePage}
-            >
-              <Text className="text-blue-800 font-bold">
-                Already have an account? Sign In
-              </Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                className="rounded-xl px-6 w-full items-center justify-center"
+                onPress={changePage}
+              >
+                <Text className="text-blue-800 font-bold">
+                  Already have an account? Sign In
+                </Text>
+              </TouchableOpacity>
+            </View>
           </ThemedView>
         </SafeAreaView>
       )}

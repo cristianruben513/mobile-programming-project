@@ -4,7 +4,7 @@ import { config } from "@/config/config";
 import * as SQLite from "expo-sqlite";
 import { Formik } from "formik";
 import React from "react";
-import { SafeAreaView, Text, TouchableOpacity } from "react-native";
+import { SafeAreaView, Text, TouchableOpacity, View } from "react-native";
 import * as Yup from "yup";
 import Input from "../Input";
 
@@ -79,40 +79,41 @@ export default function SignIn({
               Sign In
             </ThemedText>
 
-            <Input
-              placeholder="email"
-              onChangeText={handleChange("email")}
-              onBlur={handleBlur("email")}
-              value={values.email}
-              errors={errors.email as string}
-              touched={touched.email as boolean}
-            />
+            <View className="gap-6 mt-10">
+              <Input
+                placeholder="email"
+                onChangeText={handleChange("email")}
+                onBlur={handleBlur("email")}
+                value={values.email}
+                errors={errors.email as string}
+                touched={touched.email as boolean}
+              />
 
-            <Input
-              placeholder="password"
-              onChangeText={handleChange("password")}
-              onBlur={handleBlur("password")}
-              value={values.password}
-              errors={errors.password as string}
-              touched={touched.password as boolean}
-              secureTextEntry
-            />
+              <Input
+                placeholder="password"
+                onChangeText={handleChange("password")}
+                onBlur={handleBlur("password")}
+                value={values.password}
+                errors={errors.password as string}
+                touched={touched.password as boolean}
+              />
 
-            <TouchableOpacity
-              className="bg-green-600 mb-8 rounded-xl py-4 px-6 w-full items-center justify-center"
-              onPress={() => handleSubmit()}
-            >
-              <Text className="text-white font-bold">Sign In</Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                className="bg-green-600 rounded-xl py-4 px-6 w-full items-center justify-center"
+                onPress={() => handleSubmit()}
+              >
+                <Text className="text-white font-bold">Sign In</Text>
+              </TouchableOpacity>
 
-            <TouchableOpacity
-              className="rounded-xl w-full items-center justify-center"
-              onPress={changePage}
-            >
-              <Text className="text-blue-600 font-bold">
-                Don't have an account? Sign Up
-              </Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                className="rounded-xl w-full items-center justify-center"
+                onPress={changePage}
+              >
+                <Text className="text-blue-600 font-bold">
+                  Don't have an account? Sign Up
+                </Text>
+              </TouchableOpacity>
+            </View>
           </ThemedView>
         </SafeAreaView>
       )}

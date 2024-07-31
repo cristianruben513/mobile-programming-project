@@ -23,7 +23,6 @@ export default function Picker({
 
   const universalStyles = StyleSheet.create({
     input: {
-      marginTop: 10,
       fontSize: 16,
       paddingVertical: 12,
       paddingHorizontal: 10,
