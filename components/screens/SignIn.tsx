@@ -4,14 +4,9 @@ import { config } from "@/config/config";
 import * as SQLite from "expo-sqlite";
 import { Formik } from "formik";
 import React from "react";
-import {
-  SafeAreaView,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  useColorScheme,
-} from "react-native";
+import { SafeAreaView, Text, TouchableOpacity } from "react-native";
 import * as Yup from "yup";
+import Input from "../Input";
 
 const db = SQLite.openDatabaseSync(config.DATABASE_NAME);
 
@@ -61,8 +56,6 @@ export default function SignIn({
     setFirstTimeRegister(true);
   };
 
-  const colorScheme = useColorScheme();
-
   return (
     <Formik
       initialValues={{
@@ -80,36 +73,30 @@ export default function SignIn({
         errors,
         touched,
       }) => (
-        <SafeAreaView className="flex-1 h-full">
-          <ThemedView className="flex-1 justify-center h-full p-6">
+        <SafeAreaView className="flex-1">
+          <ThemedView className="flex-1 p-6">
             <ThemedText type="title" style={{ fontSize: 30, marginBottom: 10 }}>
               Sign In
             </ThemedText>
-            <ThemedText type="subtitle">Email</ThemedText>
-            <TextInput
-              className="text-white border border-neutral-400 rounded-lg p-6 py-4 mb-6"
+
+            <Input
+              placeholder="email"
               onChangeText={handleChange("email")}
               onBlur={handleBlur("email")}
               value={values.email}
-              style={{ color: colorScheme === "dark" ? "white" : "black" }}
+              errors={errors.email as string}
+              touched={touched.email as boolean}
             />
-            {errors.email && touched.email ? (
-              <Text className="text-red-500 mb-6">{errors.email}</Text>
-            ) : null}
 
-            <ThemedText type="subtitle">Password</ThemedText>
-            <TextInput
-              className="text-white border border-neutral-400 rounded-lg p-6 py-4  mb-6"
+            <Input
+              placeholder="password"
               onChangeText={handleChange("password")}
               onBlur={handleBlur("password")}
               value={values.password}
+              errors={errors.password as string}
+              touched={touched.password as boolean}
               secureTextEntry
-              style={{ color: colorScheme === "dark" ? "white" : "black" }}
             />
-
-            {errors.password && touched.password ? (
-              <Text className="text-red-500 mb-6">{errors.password}</Text>
-            ) : null}
 
             <TouchableOpacity
               className="bg-green-600 mb-8 rounded-xl py-4 px-6 w-full items-center justify-center"
@@ -119,10 +106,10 @@ export default function SignIn({
             </TouchableOpacity>
 
             <TouchableOpacity
-              className="bg-blue-700 rounded-xl py-4 px-6 w-full items-center justify-center"
+              className="rounded-xl w-full items-center justify-center"
               onPress={changePage}
             >
-              <Text className="text-white font-bold">
+              <Text className="text-blue-600 font-bold">
                 Don't have an account? Sign Up
               </Text>
             </TouchableOpacity>

@@ -1,5 +1,5 @@
-import SignIn from "@/components/SignIn";
-import SignUp from "@/components/SignUp";
+import SignIn from "@/components/screens/SignIn";
+import SignUp from "@/components/screens/SignUp";
 import React, { useState } from "react";
 
 interface AuthNavigatorProps {
@@ -11,8 +11,7 @@ export default function AuthNavigator({
   setIsSignedUp,
   setFirstTimeRegister,
 }: AuthNavigatorProps) {
-  const [firstTimeRegister, setFirstTimeRegisterInternal] =
-    useState<boolean>(true);
+  const [firstTimeRegister, setFirstTimeRegisterInternal] = useState(true);
 
   const handleChangePage = (isRegistering: boolean) => {
     setFirstTimeRegisterInternal(isRegistering);

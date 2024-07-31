@@ -9,13 +9,13 @@ import {
   SafeAreaView,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
-  useColorScheme,
   View,
 } from "react-native";
-import RNPickerSelect from "react-native-picker-select";
+
 import * as Yup from "yup";
+import Input from "../Input";
+import Picker from "../Picker";
 
 const db = SQLite.openDatabaseSync(config.DATABASE_NAME);
 
@@ -166,31 +166,6 @@ export default function SignUp({
   setIsSignedUp,
   setFirstTimeRegister,
 }: SignUpProps) {
-  const colorScheme = useColorScheme();
-
-  const pickerSelectStyles = StyleSheet.create({
-    inputIOS: {
-      fontSize: 16,
-      paddingVertical: 12,
-      paddingHorizontal: 10,
-      borderWidth: 1,
-      borderColor: "gray",
-      borderRadius: 4,
-      color: colorScheme === "dark" ? "white" : "black",
-      paddingRight: 30, // to ensure the text is never behind the icon
-    },
-    inputAndroid: {
-      fontSize: 16,
-      paddingHorizontal: 10,
-      paddingVertical: 8,
-      borderWidth: 0.5,
-      borderColor: "gray",
-      borderRadius: 8,
-      color: colorScheme === "dark" ? "white" : "black",
-      paddingRight: 30, // to ensure the text is never behind the icon
-    },
-  });
-
   const handleFormSubmit = (values: FormValues) => {
     insertDb(values)
       .then(() => {
@@ -231,136 +206,120 @@ export default function SignUp({
         touched,
       }) => (
         <SafeAreaView className="flex-1 h-full">
-          <ThemedView className="flex-1 justify-center h-full p-4">
+          <ThemedView className="flex-1 h-full p-6">
             <ThemedText type="title" style={{ fontSize: 30, marginBottom: 10 }}>
               Sign Up
             </ThemedText>
-            <ThemedText type="subtitle">Name</ThemedText>
-            <TextInput
-              className="text-white border border-neutral-400 rounded-lg p-6 py-4  mb-6"
+
+            <Input
+              placeholder="Name"
               onChangeText={handleChange("name")}
               onBlur={handleBlur("name")}
               value={values.name}
+              errors={errors.name as string}
+              touched={touched.name as boolean}
             />
-            {errors.name && touched.name ? (
-              <Text style={styles.errorText}>{errors.name}</Text>
-            ) : null}
-            <ThemedText type="subtitle">Email</ThemedText>
-            <TextInput
-              className="text-white border border-neutral-400 rounded-lg p-6 py-4  mb-6"
+
+            <Input
+              placeholder="Email"
               onChangeText={handleChange("email")}
               onBlur={handleBlur("email")}
               value={values.email}
+              errors={errors.email as string}
+              touched={touched.email as boolean}
             />
-            {errors.email && touched.email ? (
-              <Text style={styles.errorText}>{errors.email}</Text>
-            ) : null}
-            <ThemedText type="subtitle">Password</ThemedText>
-            <TextInput
-              className="text-white border border-neutral-400 rounded-lg p-6 py-4  mb-6"
+
+            <Input
+              placeholder="Password"
               onChangeText={handleChange("password")}
               onBlur={handleBlur("password")}
               value={values.password}
+              errors={errors.password as string}
+              touched={touched.password as boolean}
               secureTextEntry
             />
-            {errors.password && touched.password ? (
-              <Text style={styles.errorText}>{errors.password}</Text>
-            ) : null}
-            <ThemedText type="subtitle">Role</ThemedText>
-            <RNPickerSelect
-              onValueChange={(value) => {
-                setFieldValue("role", value);
-              }}
+
+            <Picker
+              placeholder="Role"
+              onValueChange={(value) => setFieldValue("role", value)}
               items={initialRoles}
-              style={pickerSelectStyles}
+              errors={errors.role as string}
+              touched={touched.role as boolean}
               value={values.role}
             />
-            {errors.role && touched.role ? (
-              <ThemedText className="text-red-500 mb-6">
-                {errors.role}
-              </ThemedText>
-            ) : null}
 
             {values.role === "student" && (
               <>
                 <View style={styles.row}>
                   <View style={styles.column}>
-                    <ThemedText type="subtitle">Generation</ThemedText>
-                    <RNPickerSelect
+                    <Picker
+                      placeholder="Generation"
                       onValueChange={(value) =>
                         setFieldValue("generation", value)
                       }
                       items={generation}
-                      style={pickerSelectStyles}
+                      errors={errors.generation as string}
+                      touched={touched.generation as boolean}
                       value={values.generation}
                     />
-                    {errors.generation && touched.generation ? (
-                      <Text style={styles.errorText}>{errors.generation}</Text>
-                    ) : null}
                   </View>
                   <View style={styles.column}>
-                    <ThemedText type="subtitle">Group</ThemedText>
-                    <RNPickerSelect
+                    <Picker
+                      placeholder="Group"
                       onValueChange={(value) => setFieldValue("group", value)}
                       items={group}
-                      style={pickerSelectStyles}
+                      errors={errors.group as string}
+                      touched={touched.group as boolean}
                       value={values.group}
                     />
-                    {errors.group && touched.group ? (
-                      <Text className="text-red-500 mb-6">{errors.group}</Text>
-                    ) : null}
                   </View>
                 </View>
-                <ThemedText type="subtitle">Grade</ThemedText>
-                <RNPickerSelect
+
+                <Picker
+                  placeholder="Grade"
                   onValueChange={(value) => setFieldValue("grade", value)}
                   items={grade}
-                  style={pickerSelectStyles}
+                  errors={errors.grade as string}
+                  touched={touched.grade as boolean}
                   value={values.grade}
                 />
-                {errors.grade && touched.grade ? (
-                  <Text className="text-red-500 mb-6">{errors.grade}</Text>
-                ) : null}
-                <ThemedText type="subtitle">Major</ThemedText>
-                <RNPickerSelect
+
+                <Picker
+                  placeholder="Major"
                   onValueChange={(value) => setFieldValue("major", value)}
                   items={major}
-                  style={pickerSelectStyles}
+                  errors={errors.major as string}
+                  touched={touched.major as boolean}
                   value={values.major}
                 />
-                {errors.major && touched.major ? (
-                  <Text className="text-red-500 mb-6">{errors.major}</Text>
-                ) : null}
               </>
             )}
 
             {values.role === "teacher" && (
-              <>
-                <ThemedText type="subtitle">Field</ThemedText>
-                <TextInput
-                  className="text-white border border-neutral-400 rounded-lg p-6 py-4  mb-6"
+              <View className="mt-6">
+                <Input
+                  placeholder="Field"
                   onChangeText={handleChange("field")}
                   onBlur={handleBlur("field")}
                   value={values.field}
+                  errors={errors.field as string}
+                  touched={touched.field as boolean}
                 />
-                {errors.field && touched.field ? (
-                  <Text className="text-red-500 mb-6">{errors.field}</Text>
-                ) : null}
-              </>
+              </View>
             )}
 
             <TouchableOpacity
-              className="bg-green-600 mb-8 rounded-xl py-4 px-6 w-full items-center justify-center"
+              className="bg-green-600 my-8 rounded-xl py-4 px-6 w-full items-center justify-center"
               onPress={() => handleSubmit()}
             >
               <Text className="text-white font-bold">Sign Up</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
-              className="bg-blue-700 rounded-xl py-4 px-6 w-full items-center justify-center"
+              className="rounded-xl px-6 w-full items-center justify-center"
               onPress={changePage}
             >
-              <Text className="text-white font-bold">
+              <Text className="text-blue-800 font-bold">
                 Already have an account? Sign In
               </Text>
             </TouchableOpacity>
@@ -376,10 +335,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     marginBottom: 20,
+    gap: 10,
   },
   column: {
     flex: 1,
-    marginHorizontal: 10,
   },
   errorText: {
     color: "red",
