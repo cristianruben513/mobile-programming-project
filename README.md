@@ -18,13 +18,13 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
 
 ## Caracteristicas necesarias
 
-- Diferentes Layouts
-- Multimedia
-- Fragmentos
-- Base de datos
-- Preferencias
-- Listas
-- Intentos
+- Diferentes Layouts ✅ (BottomTab, Stack)
+- Multimedia 
+- Fragmentos ✅ (Componentes)
+- Base de datos ✅ (sqlite)
+- Preferencias ✅ (uso de preferencias para guardar el usuario actual)
+- Listas ✅ (Listas de materias, apuntes, calificaciones)
+- Intentos ✅ (Botones para cambiar de pantalla)
 - Camara
 
 # Aplicación EduAssist
