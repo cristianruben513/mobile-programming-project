@@ -85,8 +85,8 @@ const insertGradesDb = async (values: Grade) => {
 const Grades: React.FC<GradesProps> = ({ route, navigation }) => {
     const [students, setStudents] = useState<Student[]>([]);
     const [className, setClassName] = useState<string>('');
-    const [grades, setGrades] = useState<{ [key: number]: number }>({}); // store grades for each student
-    const [selectedPeriod, setSelectedPeriod] = useState<string>('first'); // default to 'first' period
+    const [grades, setGrades] = useState<{ [key: number]: number }>({});
+    const [selectedPeriod, setSelectedPeriod] = useState<string>('first');
 
     useEffect(() => {
         const fetchData = async () => {

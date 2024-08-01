@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { SafeAreaView, StyleSheet, Text, View, ScrollView } from "react-native";
+import { SafeAreaView, StyleSheet, Text, View, ScrollView, TouchableOpacity } from "react-native";
+import { Assist } from "@/types/index";
 import { AssistsProps } from "@/types/types";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import * as SQLite from "expo-sqlite";
 import { config } from "@/config/config";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
+import { displayData } from "@/utils/display-data";
 
 interface Student {
     id_student: number;
@@ -58,10 +60,32 @@ const returnStudents = async (classId: number): Promise<Student[]> => {
     }
 };
 
+const insertAssitsDb = async (values: Assist) => {
+    try {
+        const statementUser = await db.prepareAsync(
+            `INSERT INTO Assists (absent, date, id_student, id_class) VALUES (?, ?, ?, ?)`,
+        );
+
+        try {
+            const result = await statementUser.executeAsync([
+                values.absent,
+                values.date,
+                values.id_student,
+                values.id_class
+            ]);
+            return result;
+        } finally {
+            await statementUser.finalizeAsync();
+        }
+    } catch (error) {
+        console.error("Unexpected error:", error);
+    }
+};
 
 const Assists: React.FC<AssistsProps> = ({ route, navigation }) => {
     const [students, setStudents] = useState<Student[]>([]);
     const [className, setClassName] = useState<string>('');
+    const [assists, setAssists] = useState<{ [key: number]: boolean }>({}); // store attendance for each student
 
     useEffect(() => {
         const fetchData = async () => {
@@ -74,6 +98,21 @@ const Assists: React.FC<AssistsProps> = ({ route, navigation }) => {
 
         fetchData();
     }, []);
+
+    const handleFormSubmit = async () => {
+        const today = new Date().toISOString().split('T')[0];
+        for (const student of students) {
+            const isAbsent = assists[student.id_student] || false;
+            await insertAssitsDb({
+                id_attendance: 0,
+                absent: isAbsent ? 0 : 1,
+                date: today,
+                id_student: student.id_student,
+                id_class: 1
+            });
+        }
+        displayData();
+    };
 
     return (
         <SafeAreaView style={styles.container}>
@@ -89,21 +128,30 @@ const Assists: React.FC<AssistsProps> = ({ route, navigation }) => {
                         {students.map((student) => (
                             <View key={student.id_student} style={styles.tableRow}>
                                 <ThemedText style={styles.tableCell}>{student.name}</ThemedText>
-                                <BouncyCheckbox style={styles.tableCell} onPress={(isChecked: boolean) => { }} fillColor="green" />
+                                <BouncyCheckbox
+                                    style={styles.tableCell}
+                                    onPress={(isChecked: boolean) => setAssists(prev => ({ ...prev, [student.id_student]: isChecked }))}
+                                    fillColor="green"
+                                />
                             </View>
                         ))}
                     </View>
                 </ScrollView>
+                <TouchableOpacity
+                    style={styles.submitButton}
+                    onPress={handleFormSubmit}
+                >
+                    <Text style={styles.submitButtonText}>Submit</Text>
+                </TouchableOpacity>
             </ThemedView>
         </SafeAreaView>
     );
-}
+};
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         height: '100%',
-
     },
     innerContainer: {
         flex: 1,
@@ -144,6 +192,20 @@ const styles = StyleSheet.create({
     },
     tableCell: {
         flex: 1,
+    },
+    submitButton: {
+        backgroundColor: 'green',
+        marginBottom: 8,
+        borderRadius: 10,
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '100%',
+    },
+    submitButtonText: {
+        color: 'white',
+        fontWeight: 'bold',
     },
 });
 
