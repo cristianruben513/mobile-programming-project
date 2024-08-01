@@ -69,6 +69,12 @@ export const insertData = async () => {
     (8, 7, 1, 1, 8);
   `;
 
+  const insertStudentsClassesQuery = `
+    INSERT OR IGNORE INTO StudentsClasses (id_student, id_class) 
+    VALUES 
+    (1, 1);
+  `;
+
   const queries = [
     insertUsersDataQuery,
     insertStudentsDataQuery,
@@ -76,6 +82,7 @@ export const insertData = async () => {
     insertClassesDataQuery,
     insertAssistsDataQuery,
     insertGradesDataQuery,
+    insertStudentsClassesQuery,
   ];
 
   for (const query of queries) {
