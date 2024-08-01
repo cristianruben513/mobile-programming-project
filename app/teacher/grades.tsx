@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { SafeAreaView, StyleSheet, Text, View, ScrollView, TextInput, useColorScheme } from "react-native";
+import { SafeAreaView, StyleSheet, Text, View, ScrollView, TextInput, useColorScheme, TouchableOpacity } from "react-native";
+import { Grade } from "@/types/index";
 import { GradesProps } from "@/types/types";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import * as SQLite from "expo-sqlite";
 import { config } from "@/config/config";
+import { displayData } from "@/utils/display-data";
+import RNPickerSelect from "react-native-picker-select";
 
 interface Student {
     id_student: number;
@@ -57,9 +60,33 @@ const returnStudents = async (classId: number): Promise<Student[]> => {
     }
 };
 
+const insertGradesDb = async (values: Grade) => {
+    try {
+        const statementUser = await db.prepareAsync(
+            `INSERT INTO Grades (grade, period, id_student, id_class) VALUES (?, ?, ?, ?)`,
+        );
+
+        try {
+            const result = await statementUser.executeAsync([
+                values.grade,
+                values.period,
+                values.id_student,
+                values.id_class
+            ]);
+            return result;
+        } finally {
+            await statementUser.finalizeAsync();
+        }
+    } catch (error) {
+        console.error("Unexpected error:", error);
+    }
+};
+
 const Grades: React.FC<GradesProps> = ({ route, navigation }) => {
     const [students, setStudents] = useState<Student[]>([]);
     const [className, setClassName] = useState<string>('');
+    const [grades, setGrades] = useState<{ [key: number]: number }>({}); // store grades for each student
+    const [selectedPeriod, setSelectedPeriod] = useState<string>('first'); // default to 'first' period
 
     useEffect(() => {
         const fetchData = async () => {
@@ -75,11 +102,63 @@ const Grades: React.FC<GradesProps> = ({ route, navigation }) => {
 
     const colorScheme = useColorScheme();
 
+    const pickerSelectStyles = StyleSheet.create({
+        inputIOS: {
+            fontSize: 16,
+            paddingVertical: 12,
+            paddingHorizontal: 10,
+            borderWidth: 1,
+            borderColor: "gray",
+            borderRadius: 4,
+            color: colorScheme === "dark" ? "white" : "black",
+            paddingRight: 30, // to ensure the text is never behind the icon
+        },
+        inputAndroid: {
+            fontSize: 16,
+            paddingHorizontal: 10,
+            paddingVertical: 8,
+            borderWidth: 0.5,
+            borderColor: "gray",
+            borderRadius: 8,
+            color: colorScheme === "dark" ? "white" : "black",
+            paddingRight: 30, // to ensure the text is never behind the icon
+        },
+    });
+
+    const handleFormSubmit = async () => {
+        for (const student of students) {
+            const gradeString = grades[student.id_student]?.toString() || '';
+            const gradeNumber = parseFloat(gradeString);
+            if (!isNaN(gradeNumber) && gradeNumber > 0 && gradeNumber <= 10) {
+                await insertGradesDb({
+                    id_grade: 0,
+                    grade: gradeNumber,
+                    period: selectedPeriod === 'first' ? 1 : 2, // Map 'first' to 1 and 'second' to 2
+                    id_student: student.id_student,
+                    id_class: 1
+                });
+            } else {
+                console.warn(`Grade for student ID ${student.id_student} is invalid: ${gradeNumber}`);
+            }
+        }
+        displayData();
+    };
+
     return (
         <SafeAreaView style={styles.container}>
             <ThemedView style={styles.innerContainer}>
                 <ThemedText style={styles.title}>Grades</ThemedText>
                 <ThemedText style={styles.className}>{className}</ThemedText>
+                <ThemedText type="subtitle">Period</ThemedText>
+                <RNPickerSelect
+                    onValueChange={(value) => setSelectedPeriod(value)}
+                    items={[
+                        { label: 'First Period', value: 'first' },
+                        { label: 'Second Period', value: 'second' }
+                    ]}
+                    style={pickerSelectStyles}
+                    value={selectedPeriod}
+                />
                 <ScrollView>
                     <View style={styles.table}>
                         <View style={styles.tableHeader}>
@@ -90,17 +169,45 @@ const Grades: React.FC<GradesProps> = ({ route, navigation }) => {
                             <View key={student.id_student} style={styles.tableRow}>
                                 <ThemedText style={styles.tableCell}>{student.name}</ThemedText>
                                 <TextInput
-                                    style={[styles.tableCellInput, { marginRight: 45, color: colorScheme === "dark" ? "white" : "black", }]}
+                                    style={[styles.tableCellInput, { marginRight: 45, color: colorScheme === "dark" ? "white" : "black" }]}
                                     keyboardType="numeric"
+                                    onChangeText={(text) => setGrades(prev => ({ ...prev, [student.id_student]: parseFloat(text) || 0 }))}
                                 />
                             </View>
                         ))}
                     </View>
                 </ScrollView>
+                <TouchableOpacity
+                    style={styles.submitButton}
+                    onPress={handleFormSubmit}
+                >
+                    <Text style={styles.submitButtonText}>Submit</Text>
+                </TouchableOpacity>
             </ThemedView>
         </SafeAreaView>
     );
 };
+
+const pickerSelectStyles = StyleSheet.create({
+    inputIOS: {
+        paddingVertical: 12,
+        paddingHorizontal: 10,
+        borderWidth: 1,
+        borderColor: '#ccc',
+        borderRadius: 4,
+        color: 'black',
+        paddingRight: 30,
+    },
+    inputAndroid: {
+        paddingVertical: 8,
+        paddingHorizontal: 10,
+        borderWidth: 1,
+        borderColor: '#ccc',
+        borderRadius: 8,
+        color: 'black',
+        paddingRight: 30,
+    },
+});
 
 const styles = StyleSheet.create({
     container: {
@@ -148,12 +255,25 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     tableCellInput: {
-
         borderColor: '#cccccc',
         borderWidth: 1,
         borderRadius: 10,
         padding: 6,
         width: 50,
+    },
+    submitButton: {
+        backgroundColor: 'green',
+        marginBottom: 8,
+        borderRadius: 10,
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '100%',
+    },
+    submitButtonText: {
+        color: 'white',
+        fontWeight: 'bold',
     },
 });
 
