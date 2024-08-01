@@ -115,98 +115,39 @@ const Assists: React.FC<AssistsProps> = ({ route, navigation }) => {
     };
 
     return (
-        <SafeAreaView style={styles.container}>
-            <ThemedView style={styles.innerContainer}>
-                <ThemedText style={styles.title}>Assists</ThemedText>
-                <ThemedText style={styles.className}>{className}</ThemedText>
+        <SafeAreaView className="flex-1 h-full">
+            <ThemedView className="flex-1 h-full p-8 pt-20">
+                <ThemedText className="t.text4xl font-bold text-center mb-2">Assists</ThemedText>
+                <ThemedText className="text-xl text-center mb-5">{className}</ThemedText>
                 <ScrollView>
-                    <View style={styles.table}>
-                        <View style={styles.tableHeader}>
-                            <ThemedText style={styles.tableHeaderText}>Student Name</ThemedText>
-                            <ThemedText style={styles.tableHeaderText}>Present</ThemedText>
+                    <View className="flex-1">
+                        <View className="flex-row border-b border-gray-300 pb-2 mb-2">
+                            <ThemedText className="flex-1 font-bold">Student Name</ThemedText>
+                            <ThemedText className="flex-1 font-bold text-right">Present</ThemedText>
                         </View>
                         {students.map((student) => (
-                            <View key={student.id_student} style={styles.tableRow}>
-                                <ThemedText style={styles.tableCell}>{student.name}</ThemedText>
-                                <BouncyCheckbox
-                                    style={styles.tableCell}
-                                    onPress={(isChecked: boolean) => setAssists(prev => ({ ...prev, [student.id_student]: isChecked }))}
-                                    fillColor="green"
-                                />
+                            <View key={student.id_student} className="flex-row items-center border-b border-gray-300 py-2">
+                                <ThemedText className="flex-1">{student.name}</ThemedText>
+                                <View className="ml-4">
+                                    <BouncyCheckbox
+                                        className="flex-1"
+                                        onPress={(isChecked: boolean) => setAssists(prev => ({ ...prev, [student.id_student]: isChecked }))}
+                                        fillColor="green"
+                                    />
+                                </View>
                             </View>
                         ))}
                     </View>
                 </ScrollView>
                 <TouchableOpacity
-                    style={styles.submitButton}
+                    className="bg-green-500 mb-2 rounded-lg py-2 px-4 items-center justify-center w-full"
                     onPress={handleFormSubmit}
                 >
-                    <Text style={styles.submitButtonText}>Submit</Text>
+                    <Text className="text-white font-bold">Submit</Text>
                 </TouchableOpacity>
             </ThemedView>
         </SafeAreaView>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        height: '100%',
-    },
-    innerContainer: {
-        flex: 1,
-        height: '100%',
-        padding: 16,
-        paddingTop: 60
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        marginBottom: 10,
-    },
-    className: {
-        fontSize: 20,
-        textAlign: 'center',
-        marginBottom: 20,
-    },
-    table: {
-        flex: 1,
-    },
-    tableHeader: {
-        flexDirection: 'row',
-        borderBottomWidth: 1,
-        borderBottomColor: '#ddd',
-        paddingBottom: 8,
-        marginBottom: 8,
-    },
-    tableHeaderText: {
-        flex: 1,
-        fontWeight: 'bold',
-    },
-    tableRow: {
-        flexDirection: 'row',
-        borderBottomWidth: 1,
-        borderBottomColor: '#ddd',
-        paddingVertical: 8,
-    },
-    tableCell: {
-        flex: 1,
-    },
-    submitButton: {
-        backgroundColor: 'green',
-        marginBottom: 8,
-        borderRadius: 10,
-        paddingVertical: 10,
-        paddingHorizontal: 20,
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: '100%',
-    },
-    submitButtonText: {
-        color: 'white',
-        fontWeight: 'bold',
-    },
-});
 
 export default Assists;
