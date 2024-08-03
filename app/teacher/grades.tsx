@@ -133,7 +133,7 @@ const Grades: React.FC<GradesProps> = ({ route, navigation }) => {
                 await insertGradesDb({
                     id_grade: 0,
                     grade: gradeNumber,
-                    period: selectedPeriod === 'first' ? 1 : 2, // Map 'first' to 1 and 'second' to 2
+                    period: selectedPeriod === 'first' ? 1 : 2,
                     id_student: student.id_student,
                     id_class: 1
                 });
@@ -145,11 +145,11 @@ const Grades: React.FC<GradesProps> = ({ route, navigation }) => {
     };
 
     return (
-        <SafeAreaView style={styles.container}>
-            <ThemedView style={styles.innerContainer}>
-                <ThemedText style={styles.title}>Grades</ThemedText>
-                <ThemedText style={styles.className}>{className}</ThemedText>
-                <ThemedText type="subtitle">Period</ThemedText>
+        <SafeAreaView className="flex-1">
+            <ThemedView className="flex-1 p-4 pt-12">
+                <ThemedText className="text-2xl font-bold text-center mb-2">Grades</ThemedText>
+                <ThemedText className="text-xl text-center mb-4">{className}</ThemedText>
+                <ThemedText className="text-lg mb-2" type="subtitle">Period</ThemedText>
                 <RNPickerSelect
                     onValueChange={(value) => setSelectedPeriod(value)}
                     items={[
@@ -160,28 +160,32 @@ const Grades: React.FC<GradesProps> = ({ route, navigation }) => {
                     value={selectedPeriod}
                 />
                 <ScrollView>
-                    <View style={styles.table}>
-                        <View style={styles.tableHeader}>
-                            <ThemedText style={styles.tableHeaderText}>Student Name</ThemedText>
-                            <ThemedText style={[styles.tableHeaderText, { marginLeft: 200 }]}>Grade</ThemedText>
+                    <View className="flex-1`">
+                        <View className="flex-row border-b border-gray-300 pb-2 mb-2">
+                            <ThemedText className="flex-1 font-bold">Student Name</ThemedText>
+                            <ThemedText className="flex-1 font-bold text-right">Grade</ThemedText>
                         </View>
                         {students.map((student) => (
-                            <View key={student.id_student} style={styles.tableRow}>
-                                <ThemedText style={styles.tableCell}>{student.name}</ThemedText>
-                                <TextInput
-                                    style={[styles.tableCellInput, { marginRight: 45, color: colorScheme === "dark" ? "white" : "black" }]}
-                                    keyboardType="numeric"
-                                    onChangeText={(text) => setGrades(prev => ({ ...prev, [student.id_student]: parseFloat(text) || 0 }))}
-                                />
+                            <View key={student.id_student} className="flex-row border-b border-gray-300 py-2">
+                                <ThemedText className="flex-1">{student.name}</ThemedText>
+                                <View className="ml-4">
+                                    <TextInput
+                                        className="border rounded-lg border-gray-300 p-1 w-20"
+                                        style={{ color: colorScheme === "dark" ? "white" : "black" }}
+                                        keyboardType="numeric"
+                                        onChangeText={(text) => setGrades(prev => ({ ...prev, [student.id_student]: parseFloat(text) || 0 }))}
+                                    />
+                                </View>
+
                             </View>
                         ))}
                     </View>
                 </ScrollView>
                 <TouchableOpacity
-                    style={styles.submitButton}
+                    className="bg-green-500 rounded py-2 px-4 items-center mt-4"
                     onPress={handleFormSubmit}
                 >
-                    <Text style={styles.submitButtonText}>Submit</Text>
+                    <Text className="text-white font-bold">Submit</Text>
                 </TouchableOpacity>
             </ThemedView>
         </SafeAreaView>
@@ -209,72 +213,5 @@ const pickerSelectStyles = StyleSheet.create({
     },
 });
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        height: '100%',
-    },
-    innerContainer: {
-        flex: 1,
-        height: '100%',
-        padding: 16,
-        paddingTop: 60
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        marginBottom: 10,
-    },
-    className: {
-        fontSize: 20,
-        textAlign: 'center',
-        marginBottom: 20,
-    },
-    table: {
-        flex: 1,
-    },
-    tableHeader: {
-        flexDirection: 'row',
-        borderBottomWidth: 1,
-        borderBottomColor: '#ddd',
-        paddingBottom: 8,
-        marginBottom: 8,
-    },
-    tableHeaderText: {
-        flex: 1,
-        fontWeight: 'bold',
-    },
-    tableRow: {
-        flexDirection: 'row',
-        borderBottomWidth: 1,
-        borderBottomColor: '#ddd',
-        paddingVertical: 8,
-    },
-    tableCell: {
-        flex: 1,
-    },
-    tableCellInput: {
-        borderColor: '#cccccc',
-        borderWidth: 1,
-        borderRadius: 10,
-        padding: 6,
-        width: 50,
-    },
-    submitButton: {
-        backgroundColor: 'green',
-        marginBottom: 8,
-        borderRadius: 10,
-        paddingVertical: 10,
-        paddingHorizontal: 20,
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: '100%',
-    },
-    submitButtonText: {
-        color: 'white',
-        fontWeight: 'bold',
-    },
-});
 
 export default Grades;
