@@ -7,8 +7,8 @@ interface Props {
   secureTextEntry?: boolean;
   onChangeText?: (text: string) => void;
   onBlur?: (e: any) => void;
-  errors: string;
-  touched: boolean;
+  errors?: string;
+  touched?: boolean;
   props?: any;
 }
 
