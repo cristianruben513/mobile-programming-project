@@ -1,8 +1,7 @@
 import { FlatList, SafeAreaView, Text, View } from "react-native";
 
 import { ThemedView } from "@/components/ThemedView";
-
-import ClassCard from "@/components/class/ClassCard";
+import ClassCard from "@/components/ClassCard";
 import Loader from "@/components/Loader";
 import { useDatabaseQuery } from "@/hooks/useDatabaseQuery";
 import { useUserStore } from "@/stores/useUserStore";

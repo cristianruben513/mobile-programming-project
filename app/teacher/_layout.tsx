@@ -1,20 +1,14 @@
-import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
-import Selection from './selection';
-import Grades from './grades';
-import Assists from './assists';
-import { RootStackParamList } from '@/types/types';
-
-const RootStack = createStackNavigator<RootStackParamList>();
+import { Stack } from "expo-router";
+import React from "react";
 
 const TeacherRootLayout: React.FC = () => {
-    return (
-        <RootStack.Navigator initialRouteName="Selection">
-            <RootStack.Screen name="Selection" component={Selection} initialParams={{ class_id: 1 }} />
-            <RootStack.Screen name="Grades" component={Grades} initialParams={{ class_id: 1 }} />
-            <RootStack.Screen name="Assists" component={Assists} initialParams={{ class_id: 1 }} />
-        </RootStack.Navigator>
-    );
+  return (
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="selection" initialParams={{ class_id: 1 }} />
+      <Stack.Screen name="grades" initialParams={{ class_id: 1 }} />
+      <Stack.Screen name="assists" initialParams={{ class_id: 1 }} />
+    </Stack>
+  );
 };
 
 export default TeacherRootLayout;

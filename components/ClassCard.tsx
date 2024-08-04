@@ -1,7 +1,7 @@
 import { ClassCardProps } from "@/types/classCard";
 import { Link } from "expo-router";
 import { Image, TouchableOpacity, View } from "react-native";
-import { ThemedText } from "../ThemedText";
+import { ThemedText } from "./ThemedText";
 
 export default function ClassCard({
   id,
