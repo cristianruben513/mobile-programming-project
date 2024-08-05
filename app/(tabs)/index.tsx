@@ -1,49 +1,14 @@
 import { FlatList, SafeAreaView, Text, View } from "react-native";
 
-import { ThemedView } from "@/components/ThemedView";
 import ClassCard from "@/components/ClassCard";
 import Loader from "@/components/Loader";
+import { ThemedView } from "@/components/ThemedView";
 import { useDatabaseQuery } from "@/hooks/useDatabaseQuery";
-import { useUserStore } from "@/stores/useUserStore";
 import { ClassCardProps } from "@/types/classCard";
-import { useSQLiteContext } from "expo-sqlite";
-import { useCallback, useEffect } from "react";
+import { useUserStore } from "@/stores/useUserStore";
 
 export default function HomeScreen() {
-  const { setUser } = useUserStore();
-  const database = useSQLiteContext();
-
-  const query = `
-  SELECT 
-      u.id_user AS userId,
-      u.name AS userName,
-      u.password AS userPassword,
-      u.email AS userEmail,
-      u.creation_date AS userCreationDate,
-      COALESCE(t.id_teacher, s.id_student) AS roleId,
-      CASE 
-          WHEN t.id_teacher IS NOT NULL THEN 'Maestro'
-          WHEN s.id_student IS NOT NULL THEN 'Estudiante'
-          ELSE 'unknown'
-      END AS userRole
-  FROM 
-      Users u
-      LEFT JOIN Teachers t ON u.id_user = t.id_user
-      LEFT JOIN Students s ON u.id_user = s.id_user
-  WHERE 
-      u.id_user = ?;
-`;
-
-  const handleGetUser = useCallback(async () => {
-    const dataUser = await database.getAllAsync(query, [8]);
-    setUser(dataUser[0]);
-  }, [database, query, setUser]);
-
-  useEffect(() => {
-    handleGetUser();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
+  const { user } = useUserStore();
   const { data, error } = useDatabaseQuery(
     ` SELECT 
         sc.id as id,
@@ -72,6 +37,14 @@ export default function HomeScreen() {
 
   if (error) {
     return <Loader />;
+  }
+
+  if (user.userRole === "Maestro") {
+    return (
+      <View className="flex-1 justify-center items-center px-6">
+        <Text className="text-xl font-bold">No tienes acceso</Text>
+      </View>
+    );
   }
 
   if (data && data.length === 0) {

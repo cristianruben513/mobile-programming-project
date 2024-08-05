@@ -7,6 +7,7 @@ const TeacherRootLayout: React.FC = () => {
       <Stack.Screen name="selection" initialParams={{ class_id: 1 }} />
       <Stack.Screen name="grades" initialParams={{ class_id: 1 }} />
       <Stack.Screen name="assists" initialParams={{ class_id: 1 }} />
+      <Stack.Screen name="insert-class" initialParams={{ class_id: 1 }} />
     </Stack>
   );
 };

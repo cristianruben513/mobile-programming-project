@@ -7,7 +7,7 @@ import { getInitials } from "@/utils/get-initials";
 export default function UserButton() {
   const { user } = useUserStore();
 
-  const initials = getInitials(user.userName);
+  const initials = getInitials(user?.userName) ?? "hh";
 
   return (
     <Link href="/user" asChild>

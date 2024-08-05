@@ -34,6 +34,14 @@ export default function TabTwoScreen() {
       });
   };
 
+  if (user.userRole === "Maestro") {
+    return (
+      <View className="flex-1 justify-center items-center px-6">
+        <Text className="text-xl font-bold">No tienes acceso</Text>
+      </View>
+    );
+  }
+
   return (
     <SafeAreaView className="flex-1 p-6">
       <ThemedView className="p-6 gap-6 flex-1">

@@ -53,6 +53,20 @@ export default function TabLayout() {
           ),
         }}
       />
+      <Tabs.Screen
+        name="teacher"
+        options={{
+          title: "Opciones para maestro",
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarItem
+              title="Maestro"
+              iconName={focused ? "add-circle" : "add-circle-outline"}
+              focused={focused}
+              color={color}
+            />
+          ),
+        }}
+      />
     </Tabs>
   );
 }

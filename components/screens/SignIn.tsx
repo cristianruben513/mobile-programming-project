@@ -1,13 +1,15 @@
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { config } from "@/config/config";
+import { useIsAuth } from "@/stores/useIsAuth";
+import { useUserStore } from "@/stores/useUserStore";
 import * as SQLite from "expo-sqlite";
+import { useSQLiteContext } from "expo-sqlite";
 import { Formik } from "formik";
 import React from "react";
 import { SafeAreaView, Text, TouchableOpacity, View } from "react-native";
 import * as Yup from "yup";
 import Input from "../Input";
-import { useIsAuth } from "@/stores/useIsAuth";
 
 const db = SQLite.openDatabaseSync(config.DATABASE_NAME);
 
@@ -21,26 +23,52 @@ const SignInSchema = Yup.object().shape({
   password: Yup.string().min(6, "Password too short!").required("Required"),
 });
 
-const checkUserCredentials = async (values: FormValues) => {
-  try {
-    const result = (await db.getFirstAsync(
-      "SELECT * FROM users WHERE email = ? AND password = ?",
-      values.email,
-      values.password,
-    )) as { rows: FormValues[] };
-    return result;
-  } catch (error) {
-    console.error("Unexpected error:", error);
-    return false;
-  }
-};
-
 export default function SignIn() {
-  const { setAuth, auth } = useIsAuth();
+  const { setAuth } = useIsAuth();
+  const { setUser } = useUserStore();
+
+  const database = useSQLiteContext();
+
+  const query = `
+  SELECT 
+      u.id_user AS userId,
+      u.name AS userName,
+      u.password AS userPassword,
+      u.email AS userEmail,
+      u.creation_date AS userCreationDate,
+      COALESCE(t.id_teacher, s.id_student) AS roleId,
+      CASE 
+          WHEN t.id_teacher IS NOT NULL THEN 'Maestro'
+          WHEN s.id_student IS NOT NULL THEN 'Estudiante'
+          ELSE 'unknown'
+      END AS userRole
+  FROM 
+      Users u
+      LEFT JOIN Teachers t ON u.id_user = t.id_user
+      LEFT JOIN Students s ON u.id_user = s.id_user
+  WHERE 
+      u.id_user = ?;
+`;
+
+  const checkUserCredentials = async (values: FormValues) => {
+    try {
+      const result = await db.getFirstAsync(
+        "SELECT * FROM users WHERE email = ? AND password = ?",
+        values.email,
+        values.password,
+      );
+
+      return result;
+    } catch (error) {
+      console.error("Unexpected error:", error);
+      return false;
+    }
+  };
 
   const handleFormSubmit = async (values: FormValues) => {
-    const isValid = await checkUserCredentials(values);
-    console.log(auth);
+    const isValid: any = await checkUserCredentials(values);
+    const dataUser = await database.getAllAsync(query, [isValid.id_user]);
+    setUser(dataUser[0]);
 
     if (isValid) {
       setAuth(true);

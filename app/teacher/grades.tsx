@@ -220,25 +220,4 @@ const Grades: React.FC<GradesProps> = ({ route, navigation }) => {
   );
 };
 
-const pickerSelectStyles = StyleSheet.create({
-  inputIOS: {
-    paddingVertical: 12,
-    paddingHorizontal: 10,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 4,
-    color: "black",
-    paddingRight: 30,
-  },
-  inputAndroid: {
-    paddingVertical: 8,
-    paddingHorizontal: 10,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 8,
-    color: "black",
-    paddingRight: 30,
-  },
-});
-
 export default Grades;

@@ -6,7 +6,7 @@ export interface User {
   userPassword: string;
   userEmail: string;
   userCreationDate: string;
-  userRole: "teacher" | "student" | "unknown";
+  userRole: "Maestro" | "Estudiante" | "unknown";
   roleId: number | null;
 }
 
