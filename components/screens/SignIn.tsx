@@ -48,32 +48,17 @@ export default function SignIn() {
       LEFT JOIN Teachers t ON u.id_user = t.id_user
       LEFT JOIN Students s ON u.id_user = s.id_user
   WHERE 
-      u.id_user = ?;
+    email = ? AND password = ?;
 `;
 
-  const checkUserCredentials = async (values: FormValues) => {
-    try {
-      const result = await db.getFirstAsync(
-        "SELECT * FROM users WHERE email = ? AND password = ?",
-        values.email,
-        values.password,
-      );
-
-      return result;
-    } catch (error) {
-      console.error("Unexpected error:", error);
-      return false;
-    }
-  };
-
   const handleFormSubmit = async (values: FormValues) => {
-    const isValid: any = await checkUserCredentials(values);
     const dataUser = await database.getAllAsync(query, [
-      isValid && isValid.id_user,
+      values.email,
+      values.password,
     ]);
     setUser(dataUser[0]);
 
-    if (isValid) {
+    if (dataUser.length > 0) {
       setAuth(true);
     } else {
       console.log("Invalid credentials");
