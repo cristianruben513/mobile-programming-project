@@ -53,20 +53,6 @@ export default function TabLayout() {
           ),
         }}
       />
-      <Tabs.Screen
-        name="apuntes"
-        options={{
-          title: "Apuntes",
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarItem
-              title="Apuntes"
-              iconName={focused ? "document-text" : "document-text-outline"}
-              focused={focused}
-              color={color}
-            />
-          ),
-        }}
-      />
     </Tabs>
   );
 }

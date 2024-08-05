@@ -7,6 +7,7 @@ import React from "react";
 import { SafeAreaView, Text, TouchableOpacity, View } from "react-native";
 import * as Yup from "yup";
 import Input from "../Input";
+import { useIsAuth } from "@/stores/useIsAuth";
 
 const db = SQLite.openDatabaseSync(config.DATABASE_NAME);
 
@@ -34,26 +35,18 @@ const checkUserCredentials = async (values: FormValues) => {
   }
 };
 
-interface SignUpProps {
-  setIsSignedUp: React.Dispatch<React.SetStateAction<boolean>>;
-  setFirstTimeRegister: React.Dispatch<React.SetStateAction<boolean>>;
-}
+export default function SignIn() {
+  const { setAuth, auth } = useIsAuth();
 
-export default function SignIn({
-  setIsSignedUp,
-  setFirstTimeRegister,
-}: SignUpProps) {
   const handleFormSubmit = async (values: FormValues) => {
     const isValid = await checkUserCredentials(values);
+    console.log(auth);
+
     if (isValid) {
-      setIsSignedUp(true);
+      setAuth(true);
     } else {
       console.log("Invalid credentials");
     }
-  };
-
-  const changePage = () => {
-    setFirstTimeRegister(true);
   };
 
   return (
@@ -76,7 +69,7 @@ export default function SignIn({
         <SafeAreaView className="flex-1">
           <ThemedView className="flex-1 p-6">
             <ThemedText type="title" style={{ fontSize: 30, marginBottom: 10 }}>
-              Sign In
+              Iniciar Sesion
             </ThemedText>
 
             <View className="gap-6 mt-10">
@@ -107,7 +100,7 @@ export default function SignIn({
 
               <TouchableOpacity
                 className="rounded-xl w-full items-center justify-center"
-                onPress={changePage}
+                onPress={() => console.log("registro")}
               >
                 <Text className="text-blue-600 font-bold">
                   Don't have an account? Sign Up

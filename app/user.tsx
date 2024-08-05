@@ -1,4 +1,5 @@
 import Loader from "@/components/Loader";
+import { useIsAuth } from "@/stores/useIsAuth";
 import { useUserStore } from "@/stores/useUserStore";
 import { getInitials } from "@/utils/get-initials";
 import { Ionicons } from "@expo/vector-icons";
@@ -15,6 +16,7 @@ function Card({ title, value }: { title: string; value: string }) {
 
 export default function UserModal() {
   const { user } = useUserStore();
+  const { setAuth } = useIsAuth();
 
   if (!user) return <Loader />;
 
@@ -30,10 +32,15 @@ export default function UserModal() {
       <Card title="Correo electronico:" value={user.userEmail} />
 
       <TouchableOpacity className="flex-row justify-center items-center py-4 rounded-xl bg-green-600 gap-3">
-        <Ionicons name="camera" size={24} color="white" />
-        <Text className="text-white text-lg font-bold">
-          Agregar foto de perfil
-        </Text>
+        <Ionicons name="camera" size={20} color="white" />
+        <Text className="text-white font-bold">Agregar foto de perfil</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        onPress={() => setAuth(false)}
+        className="flex-row justify-center items-center py-4 rounded-xl bg-red-600 gap-3"
+      >
+        <Text className="text-white font-bold">Cerrar sesion</Text>
       </TouchableOpacity>
     </View>
   );

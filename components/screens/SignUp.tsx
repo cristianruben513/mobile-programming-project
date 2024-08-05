@@ -208,7 +208,7 @@ export default function SignUp({
         <SafeAreaView className="flex-1 h-full">
           <ThemedView className="flex-1 h-full p-6">
             <ThemedText type="title" style={{ fontSize: 30, marginBottom: 10 }}>
-              Sign Up
+              Registrate
             </ThemedText>
 
             <View className="gap-6 mt-8">

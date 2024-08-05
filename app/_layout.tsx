@@ -5,9 +5,10 @@ import {
   ThemeProvider,
 } from "@react-navigation/native";
 import { Stack } from "expo-router";
-import React, { useState } from "react";
+import React from "react";
 import { useColorScheme } from "react-native";
 
+import { useIsAuth } from "@/stores/useIsAuth";
 import "react-native-reanimated";
 import "../global.css";
 import AuthNavigator from "./auth/_layout";
@@ -15,26 +16,12 @@ import AuthNavigator from "./auth/_layout";
 export default function RootLayout() {
   const colorScheme = useColorScheme();
 
-  const [isSignedUp, setIsSignedUp] = useState(false);
-  const [isTeacher, setIsTeacher] = useState(true);
-  const [isFirstTimeRegister, setFirstTimeRegister] = useState(false);
+  const { auth } = useIsAuth();
 
-  if (!isSignedUp) {
-    return (
-      <AuthNavigator
-        setIsSignedUp={setIsSignedUp}
-        setFirstTimeRegister={setFirstTimeRegister}
-      />
-    );
-  }
-
-  if (isTeacher) {
+  if (!auth) {
     return (
       <DatabaseProvider>
-        <AuthNavigator
-          setIsSignedUp={setIsSignedUp}
-          setFirstTimeRegister={setFirstTimeRegister}
-        />
+        <AuthNavigator />
       </DatabaseProvider>
     );
   }
