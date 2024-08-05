@@ -12,6 +12,9 @@ web-build/
 
 script.sh
 
+ios
+android
+
 # macOS
 .DS_Store
 

@@ -21,6 +21,8 @@ export default function SubjectExample() {
     [id],
   );
 
+  console.log(data);
+
   if (error || !data || data.length === 0) {
     return <Loader />;
   }

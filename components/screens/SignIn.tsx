@@ -9,6 +9,7 @@ import { Formik } from "formik";
 import React from "react";
 import { SafeAreaView, Text, TouchableOpacity, View } from "react-native";
 import * as Yup from "yup";
+
 import Input from "../Input";
 
 const db = SQLite.openDatabaseSync(config.DATABASE_NAME);
@@ -20,7 +21,7 @@ interface FormValues {
 
 const SignInSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Required"),
-  password: Yup.string().min(6, "Password too short!").required("Required"),
+  password: Yup.string().min(2, "Password too short!").required("Required"),
 });
 
 export default function SignIn() {
@@ -67,7 +68,9 @@ export default function SignIn() {
 
   const handleFormSubmit = async (values: FormValues) => {
     const isValid: any = await checkUserCredentials(values);
-    const dataUser = await database.getAllAsync(query, [isValid.id_user]);
+    const dataUser = await database.getAllAsync(query, [
+      isValid && isValid.id_user,
+    ]);
     setUser(dataUser[0]);
 
     if (isValid) {
@@ -100,7 +103,7 @@ export default function SignIn() {
               Iniciar Sesion
             </ThemedText>
 
-            <View className="gap-6 mt-10">
+            <View className="gap-3 mt-10">
               <Input
                 placeholder="email"
                 onChangeText={handleChange("email")}
